@@ -2,12 +2,13 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+font-family:'Poppins','Segoe UI',Roboto,Arial,sans-serif;
 }
 
 body{
 background:#f8fafc;
 color:#1e293b;
+font-family:'Poppins','Segoe UI',Roboto,Arial,sans-serif;
 }
 
 /* HEADER */
