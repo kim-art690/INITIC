@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Tableau de bord | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/dashboard.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header class="header" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 20px 8%;">
+
+  <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb;">
+    <i class="fa-solid fa-graduation-cap"></i>
+    INITIC
+  </div>
+
+  <nav aria-label="Navigation principale">
+    <ul style="display: flex; list-style: none; gap: 30px;">
+      <li><a href="index.html" title="Accueil" aria-label="Aller à l'accueil" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a></li>
+      <li><a href="Cours.html" title="Mes cours" aria-label="Voir mes cours" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Cours</a></li>
+      <li><a href="Quiz.html" title="Quiz" aria-label="Accéder aux quiz" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Quiz</a></li>
+      <li><a href="Resultats.html" title="Résultats obtenus" aria-label="Voir mes résultats" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Résultats</a></li>
+      <li><a href="login.html" title="Se connecter" aria-label="Page de connexion" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Connexion</a></li>
+    </ul>
+  </nav>
+
+</header>
+
+<div class="sidebar" role="navigation" aria-label="Menu de navigation">
+
+<h2>INITIC</h2>
+
+<ul>
+
+<li><a href="#" role="button" tabindex="0" aria-label="Aller au tableau de bord"><i class="fa-solid fa-house" aria-hidden="true"></i> Tableau de bord</a></li>
+
+<li><a href="Cours.html" role="button" tabindex="0" aria-label="Voir mes cours"><i class="fa-solid fa-book" aria-hidden="true"></i> Mes cours</a></li>
+
+<li><a href="Quiz.html" role="button" tabindex="0" aria-label="Accéder aux quiz"><i class="fa-solid fa-file-pen" aria-hidden="true"></i> Quiz</a></li>
+
+<li><a href="#" role="button" tabindex="0" aria-label="Voir ma progression"><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Progression</a></li>
+
+<li><a href="Assistant.html" role="button" tabindex="0" aria-label="Accéder à l'Assistant IA"><i class="fa-solid fa-robot" aria-hidden="true"></i> Assistant IA</a></li>
+
+<li><a href="login.html" role="button" tabindex="0" aria-label="Se déconnecter"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i> Déconnexion</a></li>
+
+</ul>
+
+</div>
+
+<div class="main">
+
+<header>
+
+<h1>Bienvenue</h1>
+
+<div class="user">
+👨‍🎓 Élève
+</div>
+
+</header>
+
+<div class="cards">
+
+<div class="card">
+
+<h3>Score moyen</h3>
+
+<h2>78%</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Quiz réalisés</h3>
+
+<h2>15</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Compétences acquises</h3>
+
+<h2>8/12</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Badge</h3>
+
+<h2>🥈 Technicien</h2>
+
+</div>
+
+</div>
+
+<section class="chart-section">
+
+<div class="chart-card">
+
+<h3>Progression générale</h3>
+
+<canvas id="progressChart"></canvas>
+
+</div>
+
+</section>
+
+<section class="competence-section">
+
+<h2>Carte des compétences</h2>
+
+<div class="competences">
+
+<div class="competence">
+
+<span>Matériel informatique</span>
+
+<div class="progress">
+<div style="width:90%"></div>
+</div>
+
+</div>
+
+<div class="competence">
+
+<span>Windows</span>
+
+<div class="progress">
+<div style="width:75%"></div>
+</div>
+
+</div>
+
+<div class="competence">
+
+<span>Word</span>
+
+<div class="progress">
+<div style="width:60%"></div>
+</div>
+
+</div>
+
+<div class="competence">
+
+<span>Excel</span>
+
+<div class="progress">
+<div style="width:40%"></div>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="diagnostic">
+
+<h2>Diagnostic Intelligent</h2>
+
+<div class="diagnostic-card">
+
+⚠ Difficultés détectées sur Excel.
+
+<div class="suggestion">
+
+Suggestion :
+
+Refaire le module
+« Création de tableaux et calculs ».
+
+</div>
+
+</div>
+
+</section>
+
+<section class="badges">
+
+<h2>Récompenses</h2>
+
+<div class="badge-grid">
+
+<div class="badge-card">
+🥉 Explorateur
+</div>
+
+<div class="badge-card">
+🥈 Technicien
+</div>
+
+<div class="badge-card">
+🔒 Expert
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+<script src=\"../Java Script/dashboard.js\"></script>
+
+</body>
+
+</html>

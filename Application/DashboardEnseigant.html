@@ -1,0 +1,563 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Enseignant | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/DashboardEnseignant.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body onload="checkAuth(); updateHeaderWithStudentName(); refreshTeacherDashboard();">
+
+<!-- HEADER RESPONSIF -->
+<header class="header-responsive" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 15px 5%;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <!-- LOGO -->
+    <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb; flex-shrink: 0;">
+      <i class="fa-solid fa-graduation-cap"></i> INITIC
+    </div>
+
+    <!-- HAMBURGER MENU (mobile) -->
+    <button id="hamburger" class="hamburger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #2563eb;">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- NAVIGATION DESKTOP - central avec flex-grow -->
+    <nav id="navMenu" class="nav-menu" style="display: flex; gap: 3rem; flex-grow: 1; justify-content: center;">
+      <a href="index.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a>
+      <a href="Cours.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Cours</a>
+      <a href="DashboardEnseigant.html" style="text-decoration: none; color: #2563eb; font-weight: 600; border-bottom: 3px solid #2563eb;">Dashboard</a>
+      <a href="login.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Connexion</a>
+    </nav>
+
+    <!-- PROFIL UTILISATEUR -->
+    <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+      <span class="user-icon" style="color: #334155; font-weight: 500;"><i class="fa-solid fa-chalkboard-user"></i> Enseignant</span>
+      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- NAV MOBILE (caché par défaut) -->
+  <nav id="mobileNav" class="mobile-nav" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    <a href="index.html">Accueil</a>
+    <a href="Cours.html">Cours</a>
+    <a href="DashboardEnseigant.html">Dashboard</a>
+    <a href="login.html">Connexion</a>
+    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+  </nav>
+
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="dashboard-container" style="max-width: 1400px; margin: 0 auto; padding: 2rem 5%;">
+
+<!-- HEADER SECTION -->
+<div style="background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(24px, 5vw, 36px); margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-line"></i> Dashboard Enseignant</h1>
+  <p style="opacity: 0.95;">Suivi complet de la progression de vos élèves et gestion du curriculum</p>
+</div>
+
+<!-- STATISTIQUES PRINCIPALES -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+
+  <!-- Stat 1: Élèves inscrits -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #2563eb;">
+    <div style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem; font-weight: 600;"><i class="fa-solid fa-users"></i> Élèves inscrits</div>
+    <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">24</div>
+    <div style="color: #10b981; font-size: 12px;">+3 cette semaine</div>
+  </div>
+
+  <!-- Stat 2: Cours créés -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #06b6d4;">
+    <div style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem; font-weight: 600;"><i class="fa-solid fa-book-open"></i> Cours créés</div>
+    <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">8</div>
+    <div style="color: #f59e0b; font-size: 12px;">2 en construction</div>
+  </div>
+
+  <!-- Stat 3: Quiz publiés -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #f59e0b;">
+    <div style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem; font-weight: 600;"><i class="fa-solid fa-brain"></i> Quiz publiés</div>
+    <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">15</div>
+    <div style="color: #10b981; font-size: 12px;">127 réponses totales</div>
+  </div>
+
+  <!-- Stat 4: Performance moyenne -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #10b981;">
+    <div style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem; font-weight: 600;"><i class="fa-solid fa-arrow-trend-up"></i> Performance moyenne</div>
+    <div style="font-size: 32px; font-weight: 700; color: #1e293b; margin-bottom: 0.5rem;">76%</div>
+    <div style="color: #10b981; font-size: 12px;">+2% depuis la semaine dernière</div>
+  </div>
+
+</div>
+
+<!-- SECTION GRAPHIQUES -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+
+  <!-- Graphique 1: Participation des élèves -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <h3 style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem;"><i class="fa-solid fa-chart-column"></i> Participation des élèves</h3>
+    <canvas id="participationChart" style="max-height: 300px;"></canvas>
+  </div>
+
+  <!-- Graphique 2: Scores par test -->
+  <div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+    <h3 style="font-size: 16px; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem;"><i class="fa-solid fa-chart-line"></i> Scores par test</h3>
+    <canvas id="scoresChart" style="max-height: 300px;"></canvas>
+  </div>
+
+</div>
+
+<!-- GESTION DES ÉLÈVES -->
+<div style="background: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+  <h2 style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 1.5rem;"><i class="fa-solid fa-users"></i> Gestion des élèves</h2>
+  
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr style="background: #f8fafc;">
+          <th style="padding: 1rem; text-align: left; font-weight: 600; color: #64748b; border-bottom: 2px solid #e2e8f0;">Nom</th>
+          <th style="padding: 1rem; text-align: left; font-weight: 600; color: #64748b; border-bottom: 2px solid #e2e8f0;">Email</th>
+          <th style="padding: 1rem; text-align: left; font-weight: 600; color: #64748b; border-bottom: 2px solid #e2e8f0;">Cours suivi</th>
+          <th style="padding: 1rem; text-align: left; font-weight: 600; color: #64748b; border-bottom: 2px solid #e2e8f0;">Score</th>
+          <th style="padding: 1rem; text-align: left; font-weight: 600; color: #64748b; border-bottom: 2px solid #e2e8f0;">Dernière activité</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 1rem;">Nom Élève 1</td>
+          <td style="padding: 1rem;">eleve1@example.com</td>
+          <td style="padding: 1rem;">5/8</td>
+          <td style="padding: 1rem;"><span style="background: #d1fae5; color: #065f46; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 12px; font-weight: 600;">85%</span></td>
+          <td style="padding: 1rem;">Il y a 2 jours</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 1rem;">Nom  2</td>
+          <td style="padding: 1rem;">eleve2@example.com</td>
+          <td style="padding: 1rem;">4/8</td>
+          <td style="padding: 1rem;"><span style="background: #fef3c7; color: #92400e; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 12px; font-weight: 600;">72%</span></td>
+          <td style="padding: 1rem;">Aujourd'hui</td>
+        </tr>
+        <tr style="border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 1rem;">Nom Élève 3</td>
+          <td style="padding: 1rem;">eleve3@example.com</td>
+          <td style="padding: 1rem;">3/8</td>
+          <td style="padding: 1rem;"><span style="background: #fee2e2; color: #7f1d1d; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 12px; font-weight: 600;">58%</span></td>
+          <td style="padding: 1rem;">Il y a 5 jours</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ACTIONS RAPIDES -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+
+  <button onclick="createCourse()" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: 0.3s; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);">
+    <div style="font-size: 24px; margin-bottom: 0.5rem;"><i class="fa-solid fa-plus"></i></div>
+    <div>Créer un cours</div>
+  </button>
+
+  <button onclick="createQuiz()" style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: 0.3s; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);">
+    <div style="font-size: 24px; margin-bottom: 0.5rem;"><i class="fa-solid fa-pen-to-square"></i></div>
+    <div>Créer un quiz</div>
+  </button>
+
+  <button onclick="viewReports()" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; padding: 1.5rem; border-radius: 12px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif; transition: 0.3s; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);">
+    <div style="font-size: 24px; margin-bottom: 0.5rem;"><i class="fa-solid fa-chart-column"></i></div>
+    <div>Voir les rapports</div>
+  </button>
+
+</div>
+
+</main>
+
+<!-- MODAL CRÉER UN COURS -->
+<div id="courseModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;">
+  <div style="background: white; border-radius: 15px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+    <h2 style="color: #1e293b; margin-bottom: 1.5rem; font-weight: 700;"><i class="fa-solid fa-plus"></i> Créer un nouveau cours</h2>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #334155; font-weight: 600;">Titre du cours</label>
+      <input type="text" id="courseTitle" placeholder="Ex: Introduction à Python" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif;">
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #334155; font-weight: 600;">Description</label>
+      <textarea id="courseDesc" placeholder="Décrivez le contenu du cours..." style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif; height: 100px; resize: vertical;"></textarea>
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+      <button onclick="saveCourse()" style="flex: 1; background: #2563eb; color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Créer</button>
+      <button onclick="closeCourseModal()" style="flex: 1; background: #f1f5f9; color: #2563eb; padding: 0.75rem; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL CRÉER UN QUIZ -->
+<div id="quizModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;">
+  <div style="background: white; border-radius: 15px; padding: 2rem; width: 90%; max-width: 500px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);">
+    <h2 style="color: #1e293b; margin-bottom: 1.5rem; font-weight: 700;"><i class="fa-solid fa-pen-to-square"></i> Créer un nouveau quiz</h2>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #334155; font-weight: 600;">Titre du quiz</label>
+      <input type="text" id="quizTitle" placeholder="Ex: Quiz Hardware" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif;">
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #334155; font-weight: 600;">Cours associé</label>
+      <select id="quizCourse" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif;">
+        <option>Matériel</option>
+        <option>Windows</option>
+        <option>Word</option>
+        <option>Excel</option>
+        <option>Internet</option>
+        <option>Sécurité</option>
+        <option>Réseaux</option>
+        <option>Introduction</option>
+      </select>
+    </div>
+    
+    <div style="margin-bottom: 1.5rem;">
+      <label style="display: block; margin-bottom: 0.5rem; color: #334155; font-weight: 600;">Nombre de questions</label>
+      <input type="number" id="quizQuestionsCount" value="5" min="1" max="20" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif;">
+    </div>
+    
+    <div style="display: flex; gap: 1rem;">
+      <button onclick="saveQuiz()" style="flex: 1; background: #06b6d4; color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Créer</button>
+      <button onclick="closeQuizModal()" style="flex: 1; background: #f1f5f9; color: #06b6d4; padding: 0.75rem; border: 2px solid #06b6d4; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RAPPORTS -->
+<div id="reportsModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; flex-direction: column;">
+  <div style="background: white; border-radius: 15px; padding: 2rem; width: 90%; max-width: 600px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-height: 80vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+      <h2 style="color: #1e293b; font-weight: 700;"><i class="fa-solid fa-chart-column"></i> Rapports Pédagogiques</h2>
+      <button onclick="closeReportsModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">×</button>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+      <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;"><i class="fa-solid fa-chart-line"></i> Progression Générale</h3>
+        <p style="color: #64748b; font-size: 14px;">Score moyen: <strong>76%</strong></p>
+        <p style="color: #64748b; font-size: 14px;">Cours complétés: <strong>4/8</strong></p>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;"><i class="fa-solid fa-chart-column"></i> Participation</h3>
+        <p style="color: #64748b; font-size: 14px;">Quiz réalisés: <strong>15</strong></p>
+        <p style="color: #64748b; font-size: 14px;">Temps moyen: <strong>45min</strong></p>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;"><i class="fa-solid fa-bullseye"></i> Points Forts</h3>
+        <p style="color: #64748b; font-size: 14px;">Meilleure matière: <strong>Matériel</strong></p>
+        <p style="color: #64748b; font-size: 14px;">Score: <strong>90%</strong></p>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px;">
+        <h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation"></i> À améliorer</h3>
+        <p style="color: #64748b; font-size: 14px;">Faible matière: <strong>Excel</strong></p>
+        <p style="color: #64748b; font-size: 14px;">Score: <strong>40%</strong></p>
+      </div>
+    </div>
+    
+    <button onclick="closeReportsModal()" style="width: 100%; margin-top: 1.5rem; background: #f59e0b; color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Fermer</button>
+  </div>
+</div>
+
+<script src="../Java Script/Protection.js"></script>
+
+<script>
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+const mobileNav = document.getElementById('mobileNav');
+
+// Afficher/masquer le menu hamburger sur mobile
+function toggleMobileMenu() {
+  if (window.innerWidth <= 768) {
+    hamburger.style.display = 'block';
+  } else {
+    hamburger.style.display = 'none';
+    navMenu.style.display = 'flex';
+    mobileNav.style.display = 'none';
+  }
+}
+
+hamburger?.addEventListener('click', () => {
+  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+});
+
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
+
+// Fonctions pour gérer les modales de création de cours/quiz
+function createCourse() {
+  document.getElementById('courseModal').style.display = 'flex';
+}
+
+function closeCourseModal() {
+  document.getElementById('courseModal').style.display = 'none';
+}
+
+function saveCourse() {
+  const title = document.getElementById('courseTitle').value.trim();
+  const desc = document.getElementById('courseDesc').value.trim();
+  
+  if (!title || !desc) {
+    alert('Veuillez remplir tous les champs');
+    return;
+  }
+  
+  // Sauvegarder le cours dans localStorage
+  let courses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  courses.push({
+    id: Date.now(),
+    title: title,
+    description: desc,
+    created: new Date().toISOString(),
+    published: true
+  });
+  localStorage.setItem('teacherCourses', JSON.stringify(courses));
+  
+  alert(`Cours "${title}" créé avec succès ! Il est maintenant visible dans la page Cours.`);
+  document.getElementById('courseTitle').value = '';
+  document.getElementById('courseDesc').value = '';
+  closeCourseModal();
+  refreshTeacherDashboard();
+}
+
+function createQuiz() {
+  document.getElementById('quizModal').style.display = 'flex';
+}
+
+function closeQuizModal() {
+  document.getElementById('quizModal').style.display = 'none';
+}
+
+function saveQuiz() {
+  const title = document.getElementById('quizTitle').value.trim();
+  const course = document.getElementById('quizCourse').value;
+  const count = document.getElementById('quizQuestionsCount').value;
+  
+  if (!title || !course) {
+    alert('Veuillez remplir tous les champs');
+    return;
+  }
+  
+  // Sauvegarder le quiz dans localStorage
+  let quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+  quizzes.push({
+    id: Date.now(),
+    title: title,
+    course: course,
+    questionCount: parseInt(count),
+    created: new Date().toISOString(),
+    published: true
+  });
+  localStorage.setItem('teacherQuizzes', JSON.stringify(quizzes));
+  
+  alert(`Quiz "${title}" créé avec succès ! Il est maintenant visible dans la page Quiz.`);
+  document.getElementById('quizTitle').value = '';
+  document.getElementById('quizQuestionsCount').value = '5';
+  closeQuizModal();
+  refreshTeacherDashboard();
+}
+
+function viewReports() {
+  renderTeacherReport();
+  document.getElementById('reportsModal').style.display = 'flex';
+}
+
+function closeReportsModal() {
+  document.getElementById('reportsModal').style.display = 'none';
+}
+
+function refreshTeacherDashboard() {
+  const courses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+  const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+  const scoreAverage = results.length
+    ? Math.round(results.reduce((sum, result) => sum + Number(result.percentage || 0), 0) / results.length)
+    : 0;
+
+  const statCards = document.querySelectorAll('.dashboard-container > div:nth-of-type(2) > div');
+  if (statCards[1]) statCards[1].children[1].textContent = String(courses.length);
+  if (statCards[1]) statCards[1].children[2].textContent = courses.length ? 'Visibles dans la page Cours' : 'Aucun cours créé';
+  if (statCards[2]) statCards[2].children[1].textContent = String(quizzes.length);
+  if (statCards[2]) statCards[2].children[2].textContent = `${results.length} réponses totales`;
+  if (statCards[3]) statCards[3].children[1].textContent = `${scoreAverage}%`;
+
+  const quizCourseSelect = document.getElementById('quizCourse');
+  if (quizCourseSelect) {
+    const currentValue = quizCourseSelect.value;
+    const baseCourses = ['Matériel', 'Windows', 'Word', 'Excel', 'Internet', 'Sécurité', 'Réseaux', 'Introduction'];
+    const courseTitles = [...baseCourses, ...courses.map(course => course.title)];
+    quizCourseSelect.innerHTML = [...new Set(courseTitles)]
+      .map(title => `<option>${title}</option>`)
+      .join('');
+    if (courseTitles.includes(currentValue)) quizCourseSelect.value = currentValue;
+  }
+}
+
+function renderTeacherReport() {
+  const courses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const quizzes = JSON.parse(localStorage.getItem('teacherQuizzes') || '[]');
+  const results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+  const averageScore = results.length
+    ? Math.round(results.reduce((sum, result) => sum + Number(result.percentage || 0), 0) / results.length)
+    : 0;
+  const completedResults = results.filter(result => Number(result.percentage || 0) >= 50).length;
+  const latestResults = results.slice(-5).reverse();
+  const modalContent = document.querySelector('#reportsModal > div');
+
+  modalContent.innerHTML = `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; gap: 1rem;">
+      <h2 style="color: #1e293b; font-weight: 700;"><i class="fa-solid fa-chart-column"></i> Rapports pédagogiques</h2>
+      <button onclick="closeReportsModal()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">×</button>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 10px;">
+        <h3 style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem;">Cours créés</h3>
+        <strong style="font-size: 28px; color: #1e293b;">${courses.length}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 10px;">
+        <h3 style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem;">Quiz créés</h3>
+        <strong style="font-size: 28px; color: #1e293b;">${quizzes.length}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 10px;">
+        <h3 style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem;">Réponses quiz</h3>
+        <strong style="font-size: 28px; color: #1e293b;">${results.length}</strong>
+      </div>
+      <div style="background: #f8fafc; padding: 1.25rem; border-radius: 10px;">
+        <h3 style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem;">Score moyen</h3>
+        <strong style="font-size: 28px; color: #1e293b;">${averageScore}%</strong>
+      </div>
+    </div>
+
+    <div style="background: #f8fafc; padding: 1.25rem; border-radius: 10px; margin-bottom: 1.5rem;">
+      <h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;">Derniers résultats</h3>
+      ${latestResults.length ? latestResults.map(result => `
+        <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+          <span style="color: #334155;">${result.title || 'Quiz général'}</span>
+          <strong style="color: ${Number(result.percentage || 0) >= 50 ? '#10b981' : '#ef4444'};">${result.percentage}%</strong>
+        </div>
+      `).join('') : '<p style="color: #64748b;">Aucun quiz réalisé pour le moment.</p>'}
+    </div>
+
+    <p style="color: #64748b; font-size: 14px; margin-bottom: 1rem;">${completedResults} résultat(s) avec au moins 50%.</p>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button onclick="window.location.href='Resultats.html'" style="flex: 1; background: #2563eb; color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Ouvrir la page résultats</button>
+      <button onclick="closeReportsModal()" style="flex: 1; background: #f1f5f9; color: #2563eb; padding: 0.75rem; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Fermer</button>
+    </div>
+  `;
+}
+
+// Fermer les modales quand on clique en dehors
+window.onclick = function(event) {
+  let courseModal = document.getElementById('courseModal');
+  let quizModal = document.getElementById('quizModal');
+  let reportsModal = document.getElementById('reportsModal');
+  
+  if (event.target === courseModal) {
+    courseModal.style.display = 'none';
+  }
+  if (event.target === quizModal) {
+    quizModal.style.display = 'none';
+  }
+  if (event.target === reportsModal) {
+    reportsModal.style.display = 'none';
+  }
+}
+
+// Initialiser les graphiques
+function initCharts() {
+  // Graphique 1: Participation
+  const ctxParticipation = document.getElementById('participationChart');
+  if (ctxParticipation) {
+    new Chart(ctxParticipation, {
+      type: 'bar',
+      data: {
+        labels: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
+        datasets: [{
+          label: 'Élèves actifs',
+          data: [18, 22, 20, 24, 16],
+          backgroundColor: [
+            'rgba(37, 99, 235, 0.8)',
+            'rgba(59, 130, 246, 0.8)',
+            'rgba(96, 165, 250, 0.8)',
+            'rgba(147, 197, 253, 0.8)',
+            'rgba(191, 219, 254, 0.8)'
+          ],
+          borderRadius: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 25 }
+        }
+      }
+    });
+  }
+
+  // Graphique 2: Scores
+  const ctxScores = document.getElementById('scoresChart');
+  if (ctxScores) {
+    new Chart(ctxScores, {
+      type: 'line',
+      data: {
+        labels: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4', 'Quiz 5'],
+        datasets: [{
+          label: 'Score moyen (%)',
+          data: [68, 72, 75, 78, 76],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: '#2563eb',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2,
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: { display: true, position: 'top' }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  }
+}
+
+// Initialiser au chargement
+setTimeout(initCharts, 500);
+</script>
+
+</body>
+
+</html>
+

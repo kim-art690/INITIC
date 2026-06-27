@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mes Résultats | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/Cours.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  background: #f8fafc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.results-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-left: 5px solid #2563eb;
+}
+
+.stat-card h3 {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.stat-trend {
+  font-size: 12px;
+  color: #10b981;
+}
+
+.stat-card.success { border-left-color: #10b981; }
+.stat-card.warning { border-left-color: #f59e0b; }
+.stat-card.danger { border-left-color: #ef4444; }
+.stat-card.info { border-left-color: #06b6d4; }
+
+.charts-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.chart-card h3 {
+  margin-bottom: 1.5rem;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.competence-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.competence-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.competence-card h4 {
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+.progress-bar-container {
+  background: #e2e8f0;
+  border-radius: 8px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb, #06b6d4);
+  border-radius: 8px;
+}
+
+.score-badge {
+  display: inline-block;
+  background: #f1f5f9;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #2563eb;
+  font-size: 12px;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .charts-section {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .chart-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-value {
+    font-size: 20px;
+  }
+}
+</style>
+
+</head>
+
+<body onload="checkAuth(); updateHeaderWithStudentName();">
+
+<!-- HEADER RESPONSIF -->
+<header class="header-responsive" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 15px 5%;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <!-- LOGO -->
+    <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb; flex-shrink: 0;">
+      <i class="fa-solid fa-graduation-cap"></i> INITIC
+    </div>
+
+    <!-- HAMBURGER MENU (mobile) -->
+    <button id="hamburger" class="hamburger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #2563eb;">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- NAVIGATION DESKTOP - centré avec flex-grow -->
+    <nav id="navMenu" class="nav-menu" style="display: flex; gap: 3rem; flex-grow: 1; justify-content: center;">
+      <a href="index.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a>
+      <a href="Cours.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Cours</a>
+      <a href="Quiz.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Quiz</a>
+      <a href="Resultats.html" style="text-decoration: none; color: #2563eb; font-weight: 600; border-bottom: 3px solid #2563eb;">Résultats</a>
+      <a href="Assistant.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Assistant</a>
+    </nav>
+
+    <!-- PROFIL UTILISATEUR -->
+    <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+      <span class="user-icon" style="color: #334155; font-weight: 500;">👨‍🎓 Élève</span>
+      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- NAV MOBILE (caché par défaut) -->
+  <nav id="mobileNav" class="mobile-nav" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    <a href="index.html">Accueil</a>
+    <a href="Cours.html">Cours</a>
+    <a href="Quiz.html">Quiz</a>
+    <a href="Resultats.html">Résultats</a>
+    <a href="Assistant.html">Assistant</a>
+    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+  </nav>
+
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="results-container">
+
+<!-- EN-TÊTE -->
+<div style="background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(24px, 5vw, 36px); margin-bottom: 0.5rem;">📊 Vos Résultats</h1>
+  <p style="opacity: 0.95;">Suivi complet de votre progression et de vos performances</p>
+</div>
+
+<!-- STATISTIQUES PRINCIPALES -->
+<div class="stats-grid">
+  <div class="stat-card success">
+    <h3>Score Moyen</h3>
+    <div id="averageScore" class="stat-value">0%</div>
+    <div class="stat-trend">Journalier</div>
+  </div>
+
+  <div class="stat-card info">
+    <h3>Quiz Réalisés</h3>
+    <div id="quizCount" class="stat-value">0</div>
+    <div class="stat-trend">Journalier</div>
+  </div>
+
+  <div class="stat-card warning">
+    <h3>Cours Complétés</h3>
+    <div id="completedCourses" class="stat-value">0 / 6</div>
+    <div class="stat-trend">A partir du curriculum</div>
+  </div>
+
+  <div class="stat-card">
+    <h3>Temps d'Apprentissage</h3>
+    <div id="learningTime" class="stat-value">0h</div>
+    <div class="stat-trend">journalier</div>
+  </div>
+</div>
+
+<!-- GRAPHIQUES -->
+<div class="charts-section">
+  <div class="chart-card">
+    <h3>📈 Progression Générale</h3>
+    <canvas id="progressChart"></canvas>
+  </div>
+
+  <div class="chart-card">
+    <h3>📊 Distribution des Scores</h3>
+    <canvas id="scoresChart"></canvas>
+  </div>
+</div>
+
+<!-- COMPÉTENCES PAR DOMAINE -->
+<div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+  <h2 style="margin-bottom: 1.5rem; color: #1e293b; font-weight: 700;">🎯 Compétences par Domaine</h2>
+
+  <div class="competence-grid">
+    <div class="competence-card">
+      <h4>💻 Conccepts généraux de l'informatique</h4>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <span class="score-badge">0%</span>
+    </div>
+
+    <div class="competence-card">
+      <h4>🪟 Présentation de l'ordintauer</h4>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <span class="score-badge">0%</span>
+    </div>
+
+    <div class="competence-card">
+      <h4>📝 Fichiers et Répertoires</h4>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <span class="score-badge">0%</span>
+    </div>
+
+    <div class="competence-card">
+      <h4>🌐 Navigateurs internet et Moteurs de recherche</h4>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <span class="score-badge">0%</span>
+    </div>
+
+    <div class="competence-card">
+      <h4>🎓 Introduction à l'Informatique</h4>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" style="width: 0%;"></div>
+      </div>
+      <span class="score-badge">0%</span>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORIQUE DES QUIZ RÉCENTS -->
+<div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 2rem;">
+  <h2 style="margin-bottom: 1.5rem; color: #1e293b; font-weight: 700;">📋 Historique des Quiz</h2>
+
+  <div id="quizHistoryContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+    <!-- Quiz history will be loaded here -->
+    <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: #64748b;">
+      Aucun quiz complété. Commencez un quiz pour voir votre historique !
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script src="../Java Script/Protection.js"></script>
+
+<script>
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+const mobileNav = document.getElementById('mobileNav');
+
+function toggleMobileMenu() {
+  if (window.innerWidth <= 768) {
+    hamburger.style.display = 'block';
+  } else {
+    hamburger.style.display = 'none';
+    mobileNav.style.display = 'none';
+    navMenu.style.display = 'flex';
+  }
+}
+
+hamburger?.addEventListener('click', () => {
+  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+});
+
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
+
+// Charger les compétences dynamiquement depuis les cours créés
+function loadCompetencies() {
+  // Récupérer les cours créés par l'administrateur OU utiliser les cours par défaut
+  const teacherCourses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  
+  // Cours par défaut
+  const defaultCourses = [
+    { id: 1, title: "💻 Concepts généraux de l'informtique" },
+    { id: 2, title: "🖧Présentation de l'ordinateur" },
+    { id: 3, title: "🪟  Fondamentaux de Windows" },
+    { id: 4, title: "📝 Fichiers et répertoires " },
+    { id: 5, title: "🌐 Navigateurs Web et moteur de recherche" },
+    { id: 6, title: " Aperçu et Notions élementaires de Microsoft Word" },
+   
+  ];
+  
+  // Utiliser les cours de l'admin s'ils existent, sinon les cours par défaut
+  const coursesToDisplay = teacherCourses.length > 0 ? teacherCourses : defaultCourses;
+  
+  const competenceGrid = document.querySelector('.competence-grid');
+  if (competenceGrid) {
+    competenceGrid.innerHTML = '';
+    
+    coursesToDisplay.forEach(course => {
+      const courseTitle = course.title || course;
+      const progress = progressData[courseTitle] || 0;
+      const color = progress >= 80 ? '#10b981' : progress >= 60 ? '#f59e0b' : '#3b82f6';
+      
+      competenceGrid.innerHTML += `
+        <div class="competence-card" style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+          <h4 style="color: #1e293b; margin-bottom: 1rem; font-weight: 600;">${courseTitle}</h4>
+          <div class="progress-bar-container" style="background: #e2e8f0; height: 8px; border-radius: 8px; overflow: hidden; margin-bottom: 0.75rem;">
+            <div class="progress-bar-fill" style="background: ${color}; width: ${progress}%; height: 100%; transition: width 0.3s ease;"></div>
+          </div>
+          <span class="score-badge" style="background: ${color}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; display: inline-block; font-size: 12px;">${progress}%</span>
+        </div>
+      `;
+    });
+  }
+}
+
+// Appeler cette fonction au chargement de la page
+loadCompetencies();
+  // Charger l'historique des quiz
+  const quizResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+  const container = document.getElementById('quizHistoryContainer');
+
+  function updateSummaryStats(results) {
+    const averageScore = results.length
+      ? Math.round(results.reduce((sum, result) => sum + Number(result.percentage || 0), 0) / results.length)
+      : 0;
+
+    const email = localStorage.getItem('studentEmail');
+    const progressKey = `courseProgress_${email}`;
+    const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+    const progressValues = Object.values(progressData).map(Number);
+    const completedCourses = progressValues.filter(value => value >= 100).length;
+
+    document.getElementById('averageScore').textContent = `${averageScore}%`;
+    document.getElementById('quizCount').textContent = results.length;
+    document.getElementById('completedCourses').textContent = `${completedCourses} / 6`;
+    document.getElementById('learningTime').textContent = `${Math.max(0, completedCourses)}h`;
+  }
+
+  updateSummaryStats(quizResults);
+  
+  if (quizResults.length > 0) {
+    container.innerHTML = '';
+    quizResults.slice().reverse().forEach((result, index) => {
+      const date = new Date(result.date).toLocaleDateString('fr-FR');
+      const percentage = result.percentage;
+      const color = percentage >= 80 ? '#10b981' : percentage >= 60 ? '#f59e0b' : '#ef4444';
+      
+      container.innerHTML += `
+        <div style="background: #f8fafc; padding: 1.5rem; border-radius: 10px; border-left: 4px solid ${color};">
+          <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+            <div>
+              <h4 style="color: #1e293b; margin-bottom: 0.25rem;">Quiz ${index + 1}</h4>
+              <p style="color: #64748b; font-size: 12px;">${date}</p>
+            </div>
+            <div style="background: ${color}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600;">
+              ${result.percentage}%
+            </div>
+          </div>
+          <p style="color: #334155;">Score: <strong>${result.score}/${result.total}</strong></p>
+        </div>
+      `;
+    });
+  }
+
+  // Graphique de progression
+  const progressCtx = document.getElementById('progressChart');
+  if (progressCtx && typeof Chart !== 'undefined') {
+    new Chart(progressCtx, {
+      type: 'line',
+      data: {
+        labels: quizResults.length
+          ? quizResults.slice(-6).map((_, index) => `Quiz ${Math.max(1, quizResults.length - 5) + index}`)
+          : ['Aucun quiz'],
+        datasets: [{
+          label: 'Score Moyen (%)',
+          data: quizResults.length
+            ? quizResults.slice(-6).map(result => Number(result.percentage || 0))
+            : [0],
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37, 99, 235, 0.1)',
+          tension: 0.4,
+          fill: true,
+          pointRadius: 5,
+          pointBackgroundColor: '#2563eb',
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: true }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  }
+
+  // Graphique de distribution des scores
+  const scoresCtx = document.getElementById('scoresChart');
+  if (scoresCtx && typeof Chart !== 'undefined') {
+    const excellent = quizResults.filter(result => result.percentage >= 90).length;
+    const good = quizResults.filter(result => result.percentage >= 80 && result.percentage < 90).length;
+    const acceptable = quizResults.filter(result => result.percentage >= 70 && result.percentage < 80).length;
+    const improve = quizResults.filter(result => result.percentage < 70).length;
+
+    new Chart(scoresCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Excellent (90-100%)', 'Bien (80-89%)', 'Acceptable (70-79%)', 'À améliorer (<70%)'],
+        datasets: [{
+          data: quizResults.length ? [excellent, good, acceptable, improve] : [0, 0, 0, 1],
+          backgroundColor: ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'],
+          borderColor: '#fff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'bottom' }
+        }
+      }
+    });
+  }
+
+</script>
+
+</body>
+
+
+</html>

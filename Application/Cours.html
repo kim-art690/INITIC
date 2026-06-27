@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mes Cours | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/Cours.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+</head>
+
+<body onload="checkAuth(); updateHeaderWithStudentName(); renderTeacherCourses(); loadCourseProgress();">
+
+<!-- HEADER RESPONSIF -->
+<header class="header-responsive" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 15px 5%;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <!-- LOGO -->
+    <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb; flex-shrink: 0;">
+      <i class="fa-solid fa-graduation-cap"></i> INITIC
+    </div>
+
+    <!-- HAMBURGER MENU (mobile) -->
+    <button id="hamburger" class="hamburger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #2563eb;">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- NAVIGATION DESKTOP - centré avec flex-grow -->
+    <nav id="navMenu" class="nav-menu" style="display: flex; gap: 3rem; flex-grow: 1; justify-content: center;">
+      <a href="index.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a>
+      <a href="Cours.html" style="text-decoration: none; color: #2563eb; font-weight: 600; border-bottom: 3px solid #2563eb;">Cours</a>
+      <a href="Quiz.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Quiz</a>
+      <a href="Resultats.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Résultats</a>
+      <a href="Assistant.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Assistant</a>
+    </nav>
+
+    <!-- PROFIL UTILISATEUR -->
+    <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+      <span class="user-icon" style="color: #334155; font-weight: 500;">👨‍🎓 Élève</span>
+      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- NAV MOBILE (caché par défaut) -->
+  <nav id="mobileNav" class="mobile-nav" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    <a href="index.html">Accueil</a>
+    <a href="Cours.html">Cours</a>
+    <a href="Quiz.html">Quiz</a>
+    <a href="Resultats.html">Résultats</a>
+    <a href="Assistant.html">Assistant</a>
+    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+  </nav>
+
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="courses-container" style="max-width: 1200px; margin: 0 auto; padding: 2rem 5%;">
+
+<!-- HEADER SECTION -->
+<div style="background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(24px, 5vw, 36px); margin-bottom: 0.5rem;">📚 Mes Cours - 7ᵉ année</h1>
+  <p style="opacity: 0.95;">Programme officiel de TIC en République Démocratique du Congo</p>
+</div>
+
+<!-- FILTRES -->
+<div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+  <button onclick="filterCourses('all', this)" class="filter-btn active" style="padding: 0.75rem 1.5rem; border: 2px solid #2563eb; background: #2563eb; color: white; border-radius: 8px; cursor: pointer; font-weight: 600;">Cours disponibles</button>
+</div>
+
+<!-- GRILLE DE COURS -->
+<div class="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+
+<!-- COURS 1 -->
+<div class="course-card" data-category="hardware" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #f59e0b, #f97316); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">💻</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">MTIC1.1. Introduction à l'Informatique</h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;">Concepts généraux de l'informatique: Définition des  concepts, Domaines d'application, Avantages et dangers.</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+       
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #f59e0b, #f97316); width: 75%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(1, 'Introduction à l\'Informatique')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #f59e0b, #f97316); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+<!-- COURS 2 -->
+<div class="course-card" data-category="hardware" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">⚙️</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;"> MTIC1.2. Présentation de l'ordinateur</h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;"> les matériels (hardware)et logiciel (Software).</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+       
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #3b82f6, #2563eb); width: 60%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(2, 'Matériel Informatique')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+<!-- COURS 3 -->
+<div class="course-card" data-category="software" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🪟</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">MTIC1.4. Fondamentaux de Windows</h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;">Maîtrisez Windows : Rôles, Bureau Windows, Gestionnaire des tâches, Fenêtres.</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+       
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #10b981, #059669); width: 50%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(3, 'Windows & Systèmes d\'Exploitation')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #10b981, #059669); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+<!-- COURS 4 -->
+<div class="course-card" data-category="software" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">MTIC1.5. Fichiers et répertoires</h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;">Créez des documents professionnels : Fichiers, extensions, répertoires.</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 30%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(4, 'Microsoft Word')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+<!-- COURS 5 -->
+<div class="course-card" data-category="software" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #ec4899, #db2777); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;"> MTIC1.8. Navigateurs et moteurs de recherche </h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;">Services internet, le navigateur web, moteur de recherche, differences entre navigateurs et moteurs, les bonnes pratiques sur internet.</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+        
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #ec4899, #db2777); width: 15%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(5, 'Navigateurs et moteurs de recherche')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #ec4899, #db2777); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+<!-- COURS 6 -->
+<div class="course-card" data-category="internet" style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;">
+  <div style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; padding: 2rem; text-align: center;">
+    <div style="font-size: 3rem; margin-bottom: 1rem;">🔗</div>
+    <h3 style="font-size: 20px; margin-bottom: 0.5rem;">MTIC1.11. Aperçu et notions élémentaires de Microsoft Word</h3>
+  </div>
+  <div style="padding: 1.5rem;">
+    <p style="color: #64748b; margin-bottom: 1rem;">Lancement de Word,  Présentation de l'interface.</p>
+    <div style="margin-bottom: 1rem;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+       
+      </div>
+      <div style="background: #e2e8f0; border-radius: 8px; height: 8px;"><div style="background: linear-gradient(90deg, #06b6d4, #0891b2); width: 0%; height: 100%; border-radius: 8px;"></div></div>
+    </div>
+    <button onclick="openCourse(6, 'Internet et Web')" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+  </div>
+</div>
+
+
+</main>
+
+<script src="../Java Script/Protection.js"></script>
+
+<script>
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+const mobileNav = document.getElementById('mobileNav');
+
+// Afficher/masquer le menu hamburger sur mobile
+function toggleMobileMenu() {
+  if (window.innerWidth <= 768) {
+    hamburger.style.display = 'block';
+    navMenu.style.display = mobileNav.style.display === 'flex' ? 'none' : 'none';
+  } else {
+    hamburger.style.display = 'none';
+    navMenu.style.display = 'flex';
+    mobileNav.style.display = 'none';
+  }
+}
+
+hamburger?.addEventListener('click', () => {
+  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+});
+
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
+
+// Charger les progressions des cours depuis localStorage
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderTeacherCourses() {
+  const teacherCourses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const coursesGrid = document.querySelector('.courses-grid');
+  if (!coursesGrid || teacherCourses.length === 0) return;
+
+  teacherCourses.forEach(course => {
+    if (document.querySelector(`[data-teacher-course-id="${course.id}"]`)) return;
+
+    const card = document.createElement('div');
+    card.className = 'course-card';
+    card.dataset.category = 'teacher';
+    card.dataset.teacherCourseId = course.id;
+    card.style.cssText = 'background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: 0.3s;';
+    card.innerHTML = `
+      <div style="background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; padding: 2rem; text-align: center;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;"><i class="fa-solid fa-book-open"></i></div>
+        <h3 style="font-size: 20px; margin-bottom: 0.5rem;">${escapeHtml(course.title)}</h3>
+        <p style="font-size: 12px; opacity: 0.9;">Cours ajouté par l'enseignant</p>
+      </div>
+      <div style="padding: 1.5rem;">
+        <p style="color: #64748b; margin-bottom: 1rem;">${escapeHtml(course.description)}</p>
+        <div style="margin-bottom: 1rem;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+            <span style="color: #64748b; font-size: 14px;">Progression</span>
+            <span style="color: #2563eb; font-weight: 600;">0%</span>
+          </div>
+          <div style="background: #e2e8f0; border-radius: 8px; height: 8px;">
+            <div style="background: linear-gradient(90deg, #2563eb, #06b6d4); width: 0%; height: 100%; border-radius: 8px;"></div>
+          </div>
+        </div>
+        <button onclick="openTeacherCourse(${course.id})" style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #2563eb, #06b6d4); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; margin-top: 1rem;">Commencer</button>
+      </div>
+    `;
+    coursesGrid.appendChild(card);
+  });
+}
+
+function openTeacherCourse(id) {
+  const courses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const course = courses.find(item => Number(item.id) === Number(id));
+  if (!course) {
+    alert('Ce cours est introuvable.');
+    return;
+  }
+
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  const currentProgress = progressData[course.title] || 0;
+  const modal = document.createElement('div');
+  modal.id = 'courseModal';
+  modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center;';
+
+  modal.innerHTML = `
+    <div style="background: white; border-radius: 15px; padding: 2rem; max-width: 650px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="color: #1e293b; margin-bottom: 0.5rem; font-size: 24px;">${escapeHtml(course.title)}</h2>
+          <p style="color: #64748b; font-size: 14px;">Cours ajouté par l'enseignant</p>
+        </div>
+        <button onclick="document.getElementById('courseModal').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">×</button>
+      </div>
+
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="color: #1e293b; margin-bottom: 0.75rem; font-weight: 600;">Contenu du cours</h3>
+        <p style="color: #475569; line-height: 1.8; white-space: pre-line;">${escapeHtml(course.description)}</p>
+      </div>
+
+      <div style="background: #f8fafc; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #1e293b; font-weight: 600;">Progression actuelle</span>
+          <span style="color: #2563eb; font-weight: 700;">${currentProgress}%</span>
+        </div>
+        <div style="background: #e2e8f0; height: 8px; border-radius: 8px; overflow: hidden; margin-top: 0.5rem;">
+          <div style="background: linear-gradient(90deg, #2563eb, #06b6d4); width: ${currentProgress}%; height: 100%;"></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button onclick="completeTeacherCourse(${course.id})" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Marquer une partie terminée</button>
+        <button onclick="document.getElementById('courseModal').remove()" style="flex: 1; background: #f1f5f9; color: #2563eb; padding: 0.75rem; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Fermer</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+}
+
+function completeTeacherCourse(id) {
+  const courses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+  const course = courses.find(item => Number(item.id) === Number(id));
+  if (!course) return;
+
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  progressData[course.title] = Math.min(100, (progressData[course.title] || 0) + 25);
+  localStorage.setItem(progressKey, JSON.stringify(progressData));
+  document.getElementById('courseModal')?.remove();
+  loadCourseProgress();
+  openTeacherCourse(id);
+}
+
+function loadCourseProgress() {
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  
+  // Mapping des cours avec leurs indices et noms
+  const courseMap = [
+    { index: 0, name: "Concepts généraux de l'informatique", selector: '.course-card:nth-child(1)' },
+    { index: 1, name: "Présentation de l'ordinateur", selector: '.course-card:nth-child(2)' },
+    { index: 2, name: "Fondamentaux de Windows", selector: '.course-card:nth-child(3)' },
+    { index: 3, name: "Fichiers et répertoires", selector: '.course-card:nth-child(4)' },
+    { index: 4, name: "Navigateurs et moteurs de recherche", selector: '.course-card:nth-child(5)' },
+    { index: 5, name: "Aperçu et notions élémentaires de Microsoft Word", selector: '.course-card:nth-child(6)' }
+ 
+  ];
+  
+  // Mettre à jour chaque carte avec la progression sauvegardée
+  courseMap.forEach(course => {
+    const progress = progressData[course.name] !== undefined ? progressData[course.name] : 0;
+    
+    // Trouver l'élément de progression dans la carte
+    const cards = document.querySelectorAll('.course-card');
+    if (cards[course.index]) {
+      const progressSpan = cards[course.index].querySelector('span[style*="font-weight: 600"]');
+      const progressBar = cards[course.index].querySelector('[style*="border-radius: 8px; height: 8px"]')?.querySelector('div');
+      
+      if (progressSpan) progressSpan.textContent = progress + '%';
+      if (progressBar) progressBar.style.width = progress + '%';
+    }
+  });
+
+  document.querySelectorAll('[data-teacher-course-id]').forEach(card => {
+    const id = Number(card.dataset.teacherCourseId);
+    const teacherCourses = JSON.parse(localStorage.getItem('teacherCourses') || '[]');
+    const course = teacherCourses.find(item => Number(item.id) === id);
+    if (!course) return;
+
+    const progress = progressData[course.title] !== undefined ? progressData[course.title] : 0;
+    const progressSpan = card.querySelector('span[style*="font-weight: 600"]');
+    const progressBar = card.querySelector('[style*="border-radius: 8px; height: 8px"]')?.querySelector('div');
+    if (progressSpan) progressSpan.textContent = progress + '%';
+    if (progressBar) progressBar.style.width = progress + '%';
+  });
+}
+
+// Filtrer les cours
+function filterCourses(category, activeButton) {
+  const cards = document.querySelectorAll('.course-card');
+  const buttons = document.querySelectorAll('.filter-btn');
+  
+  buttons.forEach(btn => btn.style.background = 'white', btn.style.color = '#334155');
+  if (activeButton) {
+    activeButton.style.background = '#2563eb';
+    activeButton.style.color = 'white';
+  }
+  
+  cards.forEach(card => {
+    if (category === 'all' || card.dataset.category === category) {
+      card.style.display = 'block';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// Informations détaillées des cours
+const coursInfo = {
+  1: {
+    title: "Concepts généraux de l'informatique",
+    description: "Découvrez les fondamentaux de l'informatique : les comcepts de base,les domaines d'application, les avantages et les dangers.",
+    details: "les concepts de base:\n• L'informatique est la science du traitement automatique de l'information à l'aide d'un ordinateur.\n• Information : ensemble de données ayant un sens.\n• Donnée : fait ou élément brut pouvant être traité.\n• Traitement : opération effectuée sur les données\n• Résultat : information obtenue après traitement \n Domaines d'application de l'informatique: Éducation, Santé, Banque \n Les avantages : Rapidité, précision, stockage de grande quantité \n Dangers: Virus informatiques, piratges",
+    duration: "1h"
+  },
+  2: {
+    title: "Présentation de l'ordinateur",
+    description: "Definition de l'ordinateur, la partie materielle (Hardware) et la partie logicielle (Software).",
+    details: " Définition: L'ordinateur est une machine électronique capable de recevoir, traiter, stocker et restituer des informations.\n la partie matérielle: c'est la partie physique et visible de l'ordinateur. Elle est composée de : \n•l'Unité Central qui est le cerveau de l'ordinateur\n•Ecran qui affiche les informations \n• Clavier qui permet de saisir les information dans l'ordinateur\n•Souris qui permet de pointer et sélectionner des éléments\n• Imprimante qui permet de produire les fichiers sous forme de papiers\n•Hauts-parleurs qui permettent de jouer des sons\n Les péripheriques de base: \n•les péripheriques d'entrée: Clavier, souris, Scanner \n• les péripheriques de sortie: Ecran, imprimante, hauts-parleurs \n•les péripheriques mixte: Clé USB, carte mémoire \n Les logiciels: Programme permettant à l'ordinateur de fonctionner.\n• Windows \n•Excel \n•Word ",
+    duration: "1h"
+  },
+  3: {
+    title: "Fondamentaux de Windows",
+    description: "Maîtrisez Windows :  Bureau Windows, Gestionnaire des tâches, les fenêtres.",
+    details: "Definition :Windows est un système d'exploitation développé par Microsoft permettant de gérer les ressources de l'ordinateur.\n Rôles: Executer et gérer les programmes \n•Le Bureau Windows: composé de : Fond d'écran, Icônes, Barre de tâches, Zone de notification\n• Les fenêtres qui comprennent: Barre de titre, Bouton réduire, Bouton fermer, Barre de menus\n• Démarrer l'ordinateur: Allumer l'unité centrale, Attendre le chargement de Windows, Ouvrir la session. \n•Arrêter l'ordinateur: Cliquer sur Démarrer, Choisir Arrêter,Attendre l'extinction complète ",
+    duration: "2h45"
+  },
+  4: {
+    title: "Fichiers et répertoires",
+    description: "Fichiers et répertoires ",
+    details: "Fichier :  est un ensemble d'informations de même enregistrées sous un nom\n•Exemples: Lettre.docx, Budget.xlsx, Photo.jpg, Musique.mp3\n Les répertoires: Un répertoire ou dossier est un emplacement servant à ranger et organiser les fichiers.\n Création des fichiers: Clic droit → Nouveau → Dossier\n Renommer un fichier: Clic droit → Renommer\n Raccourcis:\n• Copier: Ctrl+C, \n• Coller: Ctrl+V, \n•Couper: Ctrl+X \n•La corbeille conserve temporairement les fichiers supprimés avant leur suppression définitive.",
+    duration: "1h"
+  },
+  5: {
+    title: "Navigateur et moteurs de recherche",
+    description: "Services internet, le navigateur web, moteur de recherche, differences entre navigateurs et moteurs, les bonnes pratiques sur internet",
+    details: "Internet: est un réseau mondial d'ordinateurs permettant l'échange d'informations et la communication entre les utilisateurs\n• Les services d'internet: Recherche d'informations, Messagerie électronique, Réseaux sociaux, Téléchargement de fichiers, \n Navigateur web est un logiciel permettant d'accéder aux pages web et de naviguer sur Internet.\n• Exemples: Google chrome, Mozila firefox, Edge, Opera\n• Graphiques et visualisations\n• Filtres et tri de données\n• Éléments d'un navigateur: La barre de titre qui affiche le nom du site ouvert et La barre d'adresse qui permet de saisir l'adresse d'un site web. \n• Moteur de recherche: Un moteur de recherche est un service en ligne permettant de trouver des informations sur Internet à partir de mots-clés. \n•Exemples: Bing, Google \n•Différence entre navigateur et moteur de recherche:  le navigateur est un ogiciel installé sur l'ordinateur tandisqu'un moteur de recherche  est un ervice accessible sur Internet",
+    duration: "1h"
+  },
+  6: {
+    title: "Aperçu et notions élementaires de Word",
+    description: "Lancement de Word, Présentation de l'interface.",
+    details: "Lancement de word : Cliquer sur le bouton Démarrer, Rechercher Microsoft Word, Cliquer sur l'application\n• Présentation de l'interface Word: \n•Barre de titre: Affiche le nom du document\n•Barre d'outils Accès rapide: Contient les commandes fréquemment utilisées.\n• Ruban: Ensemble des outils regroupés par onglets.\n•Zone de travail: Espace où l'on saisit le texte. \n• Barre de défilement: Permet de parcourir le document.\n•Barre d'état: Affiche les informations sur le document.\n• Création d'un document: Ouvrir Word, Choisir Document vierge, Commencer la saisie.",
+    duration: "2h30"
+  },
+
+};
+
+// Contenu des leçons par cours
+const courseLessons = {
+  1: [
+    "Leçon 1: Histoire de l'informatique et évolution technologique",
+    "Leçon 2: Générations d'ordinateurs et architecture",
+    "Leçon 3: Types d'ordinateurs et leurs utilisations",
+    "Leçon 4: Introduction au matériel et logiciel"
+  ],
+  2: [
+    "Leçon 1: Le processeur (CPU) - cœur du calcul",
+    "Leçon 2: Les mémoires - RAM, ROM, SSD, HDD",
+    "Leçon 3: La carte mère et les composants internes",
+    "Leçon 4: Les périphériques d'entrée/sortie"
+  ],
+  3: [
+    "Leçon 1: Interface Windows et Bureau",
+    "Leçon 2: Gestion des fichiers et dossiers",
+    "Leçon 3: Gestionnaire des tâches et ressources",
+    "Leçon 4: Installation et gestion des programmes"
+  ],
+  4: [
+    "Leçon 1: Création et mise en forme de documents",
+    "Leçon 2: Styles et modèles prédéfinis",
+    "Leçon 3: Tableaux, images et objets",
+    "Leçon 4: En-têtes, pieds de page et export PDF"
+  ],
+  5: [
+    "Leçon 1: Création de feuilles de calcul",
+    "Leçon 2: Formules et fonctions essentielles",
+    "Leçon 3: Graphiques et visualisations de données",
+    "Leçon 4: Filtres, tri et tableaux croisés dynamiques"
+  ],
+  6: [
+    "Leçon 1: Architecture d'Internet et protocoles TCP/IP",
+    "Leçon 2: Navigateurs web et moteurs de recherche",
+    "Leçon 3: Fonctionnement du courrier électronique",
+    "Leçon 4: Sécurité et bonnes pratiques en ligne"
+  ]
+ 
+};
+
+// Ouvrir un cours - Affiche le résumé
+function openCourse(id, title) {
+  const info = coursInfo[id];
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  const currentProgress = progressData[title] || 0;
+  
+  // Créer la modal
+  const modal = document.createElement('div');
+  modal.id = 'courseModal';
+  modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center;';
+  
+  modal.innerHTML = `
+    <div style="background: white; border-radius: 15px; padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+        <div>
+          <h2 style="color: #1e293b; margin-bottom: 0.5rem; font-size: 24px;">${info.title}</h2>
+          <p style="color: #64748b; font-size: 14px;">⏱️ Durée estimée: ${info.duration}</p>
+        </div>
+        <button onclick="document.getElementById('courseModal').remove()" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #64748b;">✕</button>
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="color: #1e293b; margin-bottom: 0.75rem; font-weight: 600;">📋 Résumé</h3>
+        <p style="color: #475569; line-height: 1.6;">${info.description}</p>
+      </div>
+      
+      <div style="margin-bottom: 1.5rem;">
+        <h3 style="color: #1e293b; margin-bottom: 0.75rem; font-weight: 600;">📚 Contenu du cours</h3>
+        <p style="color: #475569; line-height: 1.8; white-space: pre-line;">${info.details}</p>
+      </div>
+      
+      <div style="background: #f8fafc; padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #1e293b; font-weight: 600;">Progression actuelle</span>
+          <span style="color: #2563eb; font-weight: 700;">${currentProgress}%</span>
+        </div>
+        <div style="background: #e2e8f0; height: 8px; border-radius: 8px; overflow: hidden; margin-top: 0.5rem;">
+          <div style="background: linear-gradient(90deg, #10b981, #06b6d4); width: ${currentProgress}%; height: 100%;"></div>
+      </div>
+      
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button onclick="startCourse(${id}, '${title.replace(/'/g, "\\'")}')" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 0.75rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">
+          Commencer le cours
+        </button>
+        <button onclick="document.getElementById('courseModal').remove()" style="flex: 1; background: #f1f5f9; color: #2563eb; padding: 0.75rem; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">
+          Fermer
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+}
+
+// Démarrer/continuer un cours - Interface complète
+function startCourse(id, title) {
+  const info = coursInfo[id];
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  const currentProgress = progressData[title] || 0;
+  const lessons = courseLessons[id] || [];
+  
+  // Supprimer la modal précédente
+  const oldModal = document.getElementById('courseModal');
+  if (oldModal) oldModal.remove();
+  
+  // Créer l'interface de leçon
+  const lessonInterface = document.createElement('div');
+  lessonInterface.id = 'lessonInterface';
+  lessonInterface.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2001; display: flex; align-items: center; justify-content: center;';
+  
+  lessonInterface.innerHTML = `
+    <div style="background: white; border-radius: 15px; padding: 2rem; max-width: 800px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3); font-family: 'Poppins', sans-serif;">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 2px solid #e2e8f0;">
+        <div>
+          <h1 style="color: #1e293b; margin: 0; font-size: 28px; margin-bottom: 0.5rem;">🎓 ${info.title}</h1>
+          <p style="color: #64748b; margin: 0; font-size: 14px;">En cours d'apprentissage</p>
+        </div>
+        <button onclick="closeLessonAndReturn()" style="background: none; border: none; font-size: 28px; cursor: pointer; color: #64748b; padding: 0; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">✕</button>
+      </div>
+      
+      <!-- Progression bar -->
+      <div style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <span style="color: #1e293b; font-weight: 600;">Progression du cours</span>
+          <span style="color: #2563eb; font-weight: 700; font-size: 20px;">${currentProgress}%</span>
+        </div>
+        <div style="background: #e2e8f0; height: 12px; border-radius: 10px; overflow: hidden;">
+          <div style="background: linear-gradient(90deg, #10b981, #06b6d4); width: ${currentProgress}%; height: 100%; transition: width 0.4s ease;"></div>
+        </div>
+      </div>
+      
+      <!-- Contenu de leçon -->
+      <div style="margin-bottom: 2rem;">
+        <h2 style="color: #1e293b; margin-bottom: 1rem; font-size: 20px;">📖 Contenu Pédagogique</h2>
+        <div style="background: #f1f5f9; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2563eb; line-height: 1.8; color: #475569;">
+          <p style="margin: 0; white-space: pre-line;">${info.details}</p>
+        </div>
+      </div>
+      
+      <!-- Leçons du cours -->
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color: #1e293b; margin-bottom: 1rem; font-size: 18px;">📚 Leçons du cours</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          ${lessons.map((lesson, index) => `
+            <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 4px solid #2563eb; color: #475569; display: flex; align-items: center; gap: 1rem;">
+              <span style="background: #2563eb; color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">${index + 1}</span>
+              <span>${lesson}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      
+      <!-- Actions -->
+      <div style="display: flex; gap: 1rem; padding-top: 1.5rem; border-top: 2px solid #e2e8f0;">
+        <button onclick="advanceProgress('${title}', ${id})" style="flex: 1; background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; font-family: 'Poppins', sans-serif;">
+          ✓ Compléter cette partie
+        </button>
+        <button onclick="closeLessonAndReturn()" style="flex: 1; background: #f1f5f9; color: #2563eb; padding: 1rem; border: 2px solid #2563eb; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; font-family: 'Poppins', sans-serif;">
+          🔙 Retour aux cours
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(lessonInterface);
+}
+
+// Avancer la progression
+function advanceProgress(title, id) {
+  const email = localStorage.getItem('studentEmail');
+  const progressKey = `courseProgress_${email}`;
+  const progressData = JSON.parse(localStorage.getItem(progressKey) || '{}');
+  
+  // Augmenter la progression de 25%
+  progressData[title] = Math.min(100, (progressData[title] || 0) + 25);
+  localStorage.setItem(progressKey, JSON.stringify(progressData));
+  
+  // Recharger l'interface de leçon
+  document.getElementById('lessonInterface').remove();
+  startCourse(id, title);
+}
+
+// Fermer la leçon et revenir à la page
+function closeLessonAndReturn() {
+  const lessonInterface = document.getElementById('lessonInterface');
+  if (lessonInterface) lessonInterface.remove();
+  
+  // Recharger la page pour mettre à jour les progressions
+  location.reload();
+}
+</script>
+
+</body>
+
+</html>

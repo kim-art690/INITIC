@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Quiz | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/Cours.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+</head>
+
+<body onload="checkAuth(); updateHeaderWithStudentName(); initializeQuiz();">
+
+<!-- HEADER RESPONSIF -->
+<header class="header-responsive" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 15px 5%;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <!-- LOGO -->
+    <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb; flex-shrink: 0;">
+      <i class="fa-solid fa-graduation-cap"></i> INITIC
+    </div>
+
+    <!-- HAMBURGER MENU (mobile) -->
+    <button id="hamburger" class="hamburger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #2563eb;">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- NAVIGATION DESKTOP - centré avec flex-grow -->
+    <nav id="navMenu" class="nav-menu" style="display: flex; gap: 3rem; flex-grow: 1; justify-content: center;">
+      <a href="index.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a>
+      <a href="Cours.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Cours</a>
+      <a href="Quiz.html" style="text-decoration: none; color: #2563eb; font-weight: 600; border-bottom: 3px solid #2563eb;">Quiz</a>
+      <a href="Resultats.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Résultats</a>
+      <a href="Assistant.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Assistant</a>
+    </nav>
+
+    <!-- PROFIL UTILISATEUR -->
+    <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+      <span class="user-icon" style="color: #334155; font-weight: 500;">👨‍🎓 Élève</span>
+      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- NAV MOBILE (caché par défaut) -->
+  <nav id="mobileNav" class="mobile-nav" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    <a href="index.html">Accueil</a>
+    <a href="Cours.html">Cours</a>
+    <a href="Quiz.html">Quiz</a>
+    <a href="Resultats.html">Résultats</a>
+    <a href="Assistant.html">Assistant</a>
+    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">Déconnexion</button>
+  </nav>
+
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="courses-container" style="max-width: 900px; margin: 0 auto; padding: 2rem 5%;">
+
+<!-- HEADER SECTION -->
+<div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(24px, 5vw, 36px); margin-bottom: 0.5rem;">🧠 Quiz d'évaluation</h1>
+  <p style="opacity: 0.95;">Testez vos connaissances et progressez</p>
+</div>
+
+<!-- QUIZ CONTAINER - CENTRÉ -->
+<div id="quizContainer" style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+
+  <!-- PROGRESSION -->
+  <div style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+      <span style="color: #64748b; font-size: 14px;">
+        Question <span id="questionNum">1</span> / <span id="totalQuestions">5</span>
+      </span>
+      <span style="color: #2563eb; font-weight: 600; font-size: 14px;">
+        ⏱ <span id="timer">60</span>s
+      </span>
+    </div>
+    <div style="height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+      <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 20%; transition: width 0.3s ease;"></div>
+    </div>
+  </div>
+
+  <!-- QUESTION -->
+  <div style="margin-bottom: 2rem;">
+    <h2 id="question" style="color: #1e293b; font-size: clamp(18px, 3vw, 24px); margin-bottom: 1.5rem;">Question</h2>
+  </div>
+
+  <!-- OPTIONS -->
+  <div id="options" style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;"></div>
+
+  <!-- BOUTONS -->
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <button onclick="previousQuestion()" style="background: #f1f5f9; color: #8b5cf6; padding: 0.75rem 1.5rem; border: 2px solid #8b5cf6; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1; min-width: 120px;">
+      ← Précédent
+    </button>
+    <button onclick="nextQuestion()" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1; min-width: 120px;">
+      Suivant →
+    </button>
+    <button onclick="finishQuiz()" style="background: #10b981; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1; min-width: 120px;">
+      Terminer
+    </button>
+  </div>
+
+</div>
+
+<!-- RÉSULTATS (caché par défaut) -->
+<div id="resultContainer" style="display: none;">
+
+  <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
+    <h2 style="font-size: clamp(24px, 5vw, 32px); margin-bottom: 1.5rem;">📊 Résultats du Quiz</h2>
+    
+    <div style="font-size: 48px; font-weight: 700; margin-bottom: 0.5rem;" id="finalScore">0/5</div>
+    <div style="font-size: 24px; margin-bottom: 1rem;" id="finalPercentage">0%</div>
+    <div id="feedback" style="font-size: 16px; opacity: 0.95;"></div>
+  </div>
+
+  <div id="answersReview" style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;"></div>
+
+  <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+    <button onclick="restartQuiz()" style="background: #8b5cf6; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1; min-width: 150px;">
+      🔄 Nouveau Quiz
+    </button>
+    <button onclick="window.location.href='Resultats.html'" style="background: #2563eb; color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; flex: 1; min-width: 150px;">
+      Voir mes Résultats
+    </button>
+  </div>
+
+</div>
+
+</main>
+
+<script src="../Java Script/Protection.js"></script>
+
+<script>
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+const mobileNav = document.getElementById('mobileNav');
+
+function toggleMobileMenu() {
+  if (window.innerWidth <= 768) {
+    hamburger.style.display = 'block';
+  } else {
+    hamburger.style.display = 'none';
+    navMenu.style.display = 'flex';
+    mobileNav.style.display = 'none';
+  }
+}
+
+hamburger?.addEventListener('click', () => {
+  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+});
+
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
+
+// Quiz Questions Database - mélangées aléatoirement
+const questionDatabase = [
+  { question: "L'informatique est:  ?", options: ["Une machine", "Une science du traitement automatique de l'information", "Un téléphone"], answer: 1, course: "Les concepts généraux de l'informatique" },
+  { question: "Quel logiciel permet de taper un texte ?", options: ["Excel", "Word", "PowerPoint"], answer: 1, course: "Word" },
+  { question: "Windows est un ...", options: ["Logiciel système", "Jeu", "Antivirus"], answer: 0, course: "Windows" },
+  { question: "Parmi les domaines suivants, lequel utilise l'informatique ? ?", options: ["Santé", "Education", "Les deux"], answer: 2, course: "Matériel" },
+  { question: "Qu'est-ce qu'Internet ?", options: ["Un logiciel", "Un réseau mondial", "Un antivirus"], answer: 1, course: "Internet" },
+  { question: "Comment ouvrir un fichier dans Word ?", options: ["Ctrl+S", "Ctrl+O", "Ctrl+N"], answer: 1, course: "Word" },
+  { question: "L'un des avantages de l'informatique est ?", options: ["Précision", "Lenteur", "Erreur"], answer: 0, course: "Matériel" },
+  { question: "Qu'est-ce qu'un navigateur web ?", options: ["Un outil Word", "Un programme pour naviguer sur Internet", "Un type d'antivirus"], answer: 1, course: "Internet" },
+  { question: "Le clavier est ?", options: ["Péripherique d'entrée", "Péripherique de sortie", "Péripherique mixte"], answer: 0, course: "Matériel" },
+  { question: "Le bureau apparaît?", options: ["Après le démarrage de Windows", "Avant le démarrage", "Pendant la saisie"], answer: 0, course: "Word" },
+  { question: "Le bouton Démarrer permet", options: ["D'éteindre l'écran", "D'imprimer", "voir tous les programmes"], answer: 2, course: "Windows" },
+  { question: "La barre des tâches se trouve", options: ["Word ", "Bureau", "Excel"], answer: 1, course: "Matériel" },
+  { question: "Un dossier sert à ?", options: ["Organiser les fichiers", "Imprimer", "saisir"], answer: 0, course: "Internet" },
+  { question: "L'extension .jpg correspond à ...?", options: ["fichier word", "fichier Excel", "Fichier image"], answer: 2, course: "Word" },
+  { question: "Lequel est un navigateur ?", options: ["google", "Bing", "Chrome"], answer: 2, course: "Matériel" },
+  { question: "La zone de travail sert à ... ?", options: ["Imprimer", "Ecrire un document", "Ouvrir internet"], answer: 1, course: "Internet" }
+];
+
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+let score = 0;
+let timeLeft = 60;
+let timer;
+let userAnswers = [];
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function initializeQuiz() {
+  // Sélectionner 5 questions aléatoires
+  currentQuestions = shuffleArray([...questionDatabase]).slice(0, 5);
+  userAnswers = new Array(5).fill(null);
+  score = 0;
+  currentQuestionIndex = 0;
+  timeLeft = 60;
+
+  loadQuestion();
+  startTimer();
+}
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    document.getElementById('timer').textContent = timeLeft;
+    
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      finishQuiz();
+    }
+  }, 1000);
+}
+
+function loadQuestion() {
+  const q = currentQuestions[currentQuestionIndex];
+  document.getElementById('question').textContent = q.question;
+  document.getElementById('questionNum').textContent = currentQuestionIndex + 1;
+  document.getElementById('totalQuestions').textContent = currentQuestions.length;
+  document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / currentQuestions.length * 100) + '%';
+
+  const optionsDiv = document.getElementById('options');
+  optionsDiv.innerHTML = '';
+
+  q.options.forEach((opt, index) => {
+    const button = document.createElement('button');
+    const letter = String.fromCharCode(65 + index);
+    button.style.cssText = `
+      cursor: pointer;
+      font-weight: 500;
+      transition: 0.3s;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+    `;
+    button.className = 'quiz-option';
+    button.innerHTML = `<span class="quiz-option-letter">${letter}</span><span>${opt}</span>`;
+    button.onclick = () => selectOption(index);
+
+    if (userAnswers[currentQuestionIndex] === index) {
+      button.classList.add('selected');
+    }
+
+    button.onmouseover = function() { 
+      if (userAnswers[currentQuestionIndex] !== index) {
+        this.style.borderColor = '#8b5cf6'; 
+      }
+    };
+    button.onmouseout = function() { 
+      if (userAnswers[currentQuestionIndex] !== index) {
+        this.style.borderColor = '#e2e8f0'; 
+      }
+    };
+
+    optionsDiv.appendChild(button);
+  });
+}
+
+function selectOption(index) {
+  userAnswers[currentQuestionIndex] = index;
+  loadQuestion();
+}
+
+function nextQuestion() {
+  if (currentQuestionIndex < currentQuestions.length - 1) {
+    currentQuestionIndex++;
+    loadQuestion();
+  }
+}
+
+function previousQuestion() {
+  if (currentQuestionIndex > 0) {
+    currentQuestionIndex--;
+    loadQuestion();
+  }
+}
+
+function finishQuiz() {
+  clearInterval(timer);
+  
+  // Calculer le score
+  score = 0;
+  for (let i = 0; i < currentQuestions.length; i++) {
+    if (userAnswers[i] === currentQuestions[i].answer) {
+      score++;
+    }
+  }
+
+  // Afficher les résultats
+  const percentage = Math.round((score / currentQuestions.length) * 100);
+  document.getElementById('finalScore').textContent = score + '/' + currentQuestions.length;
+  document.getElementById('finalPercentage').textContent = percentage + '%';
+
+  let feedback = '';
+  if (percentage >= 90) feedback = '🏆 Excellent ! Vous maîtrisez très bien le sujet !';
+  else if (percentage >= 75) feedback = '⭐ Bon travail ! Continuez vos efforts !';
+  else if (percentage >= 50) feedback = '👍 C\'est un bon début. Révisez les notions !';
+  else feedback = '📚 Continuez à réviser, vous progresserez !';
+
+  document.getElementById('feedback').textContent = feedback;
+
+  // Afficher l'examen des réponses
+  const reviewDiv = document.getElementById('answersReview');
+  reviewDiv.innerHTML = '<h3 style="color: #1e293b; margin-bottom: 1rem; font-weight: 700;">Examen des réponses :</h3>';
+  
+  currentQuestions.forEach((q, i) => {
+    const isCorrect = userAnswers[i] === q.answer;
+    reviewDiv.innerHTML += `
+      <div style="background: ${isCorrect ? '#d1fae5' : '#fee2e2'}; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid ${isCorrect ? '#10b981' : '#ef4444'};">
+        <p style="color: #1e293b; font-weight: 600; margin-bottom: 0.5rem;">Q${i+1}: ${q.question}</p>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 0.5rem;">Votre réponse: <strong>${userAnswers[i] !== null ? q.options[userAnswers[i]] : 'Non répondue'}</strong></p>
+        <p style="color: #64748b; font-size: 14px;">Réponse correcte: <strong>${q.options[q.answer]}</strong></p>
+      </div>
+    `;
+  });
+
+  // Sauvegarder le score dans localStorage
+  let results = JSON.parse(localStorage.getItem('quizResults') || '[]');
+  results.push({ score, total: currentQuestions.length, percentage, date: new Date().toISOString() });
+  localStorage.setItem('quizResults', JSON.stringify(results));
+
+  // Afficher les résultats
+  document.getElementById('quizContainer').style.display = 'none';
+  document.getElementById('resultContainer').style.display = 'block';
+}
+
+function restartQuiz() {
+  document.getElementById('quizContainer').style.display = 'block';
+  document.getElementById('resultContainer').style.display = 'none';
+  initializeQuiz();
+}
+</script>
+
+</body>
+
+</html>

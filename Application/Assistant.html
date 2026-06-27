@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Assistant IA | INITIC</title>
+
+<link rel="stylesheet" href="../CSS/responsive.css">
+<link rel="stylesheet" href="../CSS/Cours.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+
+<style>
+.assistant-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 5%;
+}
+
+#chatBox {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.message {
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  animation: slideIn 0.3s ease;
+}
+
+.message.bot {
+  justify-content: flex-start;
+}
+
+.message.user {
+  justify-content: flex-end;
+}
+
+.message-content {
+  max-width: 70%;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.message.bot .message-content {
+  background: #f1f5f9;
+  color: #1e293b;
+  border-left: 3px solid #2563eb;
+}
+
+.message.user .message-content {
+  background: #2563eb;
+  color: white;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  #chatBox {
+    height: 300px;
+  }
+
+  .message-content {
+    max-width: 85%;
+  }
+}
+</style>
+
+</head>
+
+<body onload="checkAuth(); updateHeaderWithStudentName();">
+
+<!-- HEADER RESPONSIF -->
+<header class="header-responsive" style="background: white; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; padding: 15px 5%;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    
+    <!-- LOGO -->
+    <div class="logo" style="font-size: 24px; font-weight: 700; color: #2563eb; flex-shrink: 0;">
+      <i class="fa-solid fa-graduation-cap"></i> INITIC
+    </div>
+
+    <!-- HAMBURGER MENU (mobile) -->
+    <button id="hamburger" class="hamburger" aria-label="Menu" style="display: none; background: none; border: none; cursor: pointer; font-size: 24px; color: #2563eb;">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <!-- NAVIGATION DESKTOP - centré avec flex-grow -->
+    <nav id="navMenu" class="nav-menu" style="display: flex; gap: 3rem; flex-grow: 1; justify-content: center;">
+      <a href="index.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Accueil</a>
+      <a href="Cours.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Cours</a>
+      <a href="Quiz.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Quiz</a>
+      <a href="Resultats.html" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">Résultats</a>
+      <a href="Assistant.html" style="text-decoration: none; color: #2563eb; font-weight: 600; border-bottom: 3px solid #2563eb;">Assistant</a>
+    </nav>
+
+    <!-- PROFIL UTILISATEUR -->
+    <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
+      <span class="user-icon" style="color: #334155; font-weight: 500;">👨‍🎓 Élève</span>
+      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    </div>
+  </div>
+
+  <!-- NAV MOBILE (caché par défaut) -->
+  <nav id="mobileNav" class="mobile-nav" style="display: none; flex-direction: column; gap: 1rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+    <a href="index.html">Accueil</a>
+    <a href="Cours.html">Cours</a>
+    <a href="Quiz.html">Quiz</a>
+    <a href="Resultats.html">Résultats</a>
+    <a href="Assistant.html">Assistant</a>
+    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%;">Déconnexion</button>
+  </nav>
+
+</header>
+
+<!-- CONTENU PRINCIPAL -->
+<main class="assistant-container">
+
+<!-- EN-TÊTE -->
+<div style="background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
+  <h1 style="font-size: clamp(24px, 5vw, 36px); margin-bottom: 0.5rem;">🤖 Assistant IA INITIC</h1>
+  <p style="opacity: 0.95;">Votre tuteur personnel pour vous aider à réussir en informatique</p>
+</div>
+
+<!-- CHAT DISPLAY -->
+<div id="chatBox" style="background: white; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; height: 400px; overflow-y: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+</div>
+
+<!-- INPUT AREA -->
+<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+  <input type="text" id="userInput" placeholder="🔍 Posez une question..." style="flex: 1; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 14px;" onkeypress="if(event.key==='Enter') sendMessage();">
+  <button onclick="sendMessage()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Poppins', sans-serif;">Envoyer</button>
+</div>
+
+</main>
+
+<script src="../Java Script/Protection.js"></script>
+
+<script>
+// Hamburger Menu
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('navMenu');
+const mobileNav = document.getElementById('mobileNav');
+
+function toggleMobileMenu() {
+  if (window.innerWidth <= 768) {
+    hamburger.style.display = 'block';
+  } else {
+    hamburger.style.display = 'none';
+    navMenu.style.display = 'flex';
+    mobileNav.style.display = 'none';
+  }
+}
+
+hamburger?.addEventListener('click', () => {
+  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+});
+
+window.addEventListener('resize', toggleMobileMenu);
+toggleMobileMenu();
+
+// Base de connaissances pédagogique enrichie avec contexte complet
+const knowledgeBase = {
+  "cpu": {
+    keywords: ["cpu", "processeur", "unité centrale", "ghz", "fréquence"],
+    answer: "🖥️ **CPU (Processeur Central)** - Le cœur de votre ordinateur qui exécute toutes les instructions.\n\n• **Rôle**: Effectuer les calculs et les opérations logiques\n• **Vitesse**: Mesurée en GHz (gigahertz)\n• **Cores**: Plus de cœurs = traitement multitâche meilleur\n• **Cache**: Mémoire rapide intégrée dans le CPU\n\n**Exemple**: Un CPU avec 8 cores à 3.5 GHz peut exécuter 8 opérations par cycle d'horloge."
+  },
+  "ram": {
+    keywords: ["ram", "mémoire", "volatile", "go", "mb"],
+    answer: "💾 **RAM (Mémoire Vive)** - Mémoire temporaire ultra-rapide de votre ordinateur.\n\n• **Type**: Volatile (données perdues à l'extinction)\n• **Vitesse**: Très rapide comparée au disque dur\n• **Rôle**: Stocke les programmes et données en cours d'utilisation\n• **Taille typique**: 8 Go, 16 Go ou 32 Go\n\n**Astuce**: Plus vous avez de RAM, plus votre ordinateur peut exécuter de programmes simultanément sans ralentir."
+  },
+  "internet": {
+    keywords: ["internet", "web", "réseau", "connection", "adresse ip", "wifi"],
+    answer: "🌐 **Internet et le Web** - Le réseau mondial connectant des milliards d'appareils.\n\n• **Internet**: Réseau global d'ordinateurs interconnectés\n• **Web (WWW)**: Application d'Internet utilisant le protocole HTTP/HTTPS\n• **Adresse IP**: Identifiant unique pour chaque appareil (ex: 192.168.1.1)\n• **Protocoles**: HTTP (pages web), HTTPS (sécurisé), FTP (fichiers)\n\n**Comment ça marche**: Vos données passent par des serveurs interconnectés pour atteindre leur destination via des câbles, satellites et ondes radio."
+  },
+  "sécurité": {
+    keywords: ["sécurité", "virus", "antivirus", "password", "mot de passe", "firewall", "phishing"],
+    answer: "🔒 **Sécurité Informatique** - Protégez vos données et votre vie privée.\n\n• **Mots de passe**: Au moins 8 caractères avec majuscules, chiffres et symboles\n• **Antivirus**: Détecte et supprime les logiciels malveillants\n• **Pare-feu (Firewall)**: Contrôle le trafic réseau entrant/sortant\n• **Mises à jour**: Corrigent les failles de sécurité\n• **Phishing**: Arnaque par email/SMS - ne cliquez pas sur les liens suspects\n\n**Conseil**: Utilisez un gestionnaire de mots de passe et l'authentification à deux facteurs."
+  },
+  "windows": {
+    keywords: ["windows", "système d'exploitation", "os", "explorateur", "fichiers"],
+    answer: "🪟 **Windows - Système d'Exploitation** - Logiciel qui gère votre ordinateur.\n\n• **Versions récentes**: Windows 10 et Windows 11\n• **Rôle**: Gérer les ressources (CPU, RAM, disque dur), applications\n• **Interface**: Bureau avec fenêtres, icônes, barre des tâches\n• **Explorateur de fichiers**: Permet de naviguer dans vos dossiers\n• **Paramètres**: Configuration du système et des appareils\n\n**Astuces**: Utilisez Ctrl+Alt+Suppr pour la gestion des tâches, Win+D pour le bureau."
+  },
+  "word": {
+    keywords: ["word", "traitement de texte", "document", "feuille", "mise en forme", "police"],
+    answer: "📝 **Microsoft Word** - Logiciel de traitement de texte professionnel.\n\n• **Fonction**: Créer et formater des documents texte\n• **Formatage**: Gras, italique, souligné, couleurs, polices\n• **Outils**: Tables, images, en-têtes/pieds de page, styles\n• **Export**: Possibilité d'exporter en PDF\n• **Collaboration**: Partage et édition en temps réel\n\n**Usage courant**: Essais, rapports, lettres, CV, présentation de projet."
+  },
+  "excel": {
+    keywords: ["excel", "tableur", "feuille de calcul", "formule", "graphique", "somme"],
+    answer: "📊 **Microsoft Excel** - Tableur pour traiter et analyser des données.\n\n• **Structure**: Lignes, colonnes, cellules (ex: A1, B2)\n• **Formules**: =SUM (somme), =AVERAGE (moyenne), =IF (condition)\n• **Graphiques**: Visualiser les données sous forme de graphes\n• **Filtres et tri**: Organiser et trouver rapidement les données\n• **Fonctions avancées**: VLOOKUP, pivot tables, macros\n\n**Exemple**: =SUM(A1:A10) additionne les valeurs de A1 à A10."
+  },
+  "hardware": {
+    keywords: ["hardware", "matériel", "composant", "disque", "carte mère", "gpu"],
+    answer: "⚙️ **Matériel Informatique (Hardware)** - Composants physiques de l'ordinateur.\n\n• **Composants essentiels**:\n  - CPU: Processeur central\n  - RAM: Mémoire vive\n  - SSD/HDD: Stockage permanent\n  - Carte mère: Connecte tous les composants\n  - GPU: Carte graphique pour affichage\n  - Alimentation: Fournit l'électricité\n  - Refroidissement: Ventilateurs et radiateurs\n\n**Différence**: Le hardware est physique, tandis que le software (logiciel) est des programmes."
+  },
+  "réseaux": {
+    keywords: ["réseau", "routeur", "commutateur", "adresse ip", "ping", "lan"],
+    answer: "🖧 **Réseaux Informatiques** - Connexion entre plusieurs ordinateurs.\n\n• **Types de réseaux**:\n  - LAN: Réseau local (maison, bureau)\n  - WAN: Réseau étendu (Internet)\n  - WiFi: Connexion sans fil\n  - Ethernet: Connexion filaire\n\n• **Outils réseau**:\n  - Routeur: Dirige le trafic réseau\n  - Commutateur (Switch): Connecte plusieurs appareils\n  - Modem: Connexion Internet\n  - Ping: Teste la connexion réseau\n\n**Astuce**: Utilisez un mot de passe fort pour votre WiFi !"
+  },
+  "default": {
+    answer: "❓ Je ne suis pas certain de la réponse à votre question.\n\nVous pouvez me poser des questions sur :\n✓ CPU et Processeurs\n✓ RAM (Mémoire vive)\n✓ Internet et Web\n✓ Sécurité informatique\n✓ Windows\n✓ Microsoft Word\n✓ Microsoft Excel\n✓ Matériel informatique (Hardware)\n✓ Réseaux informatiques\n\nEssayez de reformuler votre question ou consultez vos cours pour plus de détails !"
+  }
+};
+
+function findAnswer(question) {
+  const lower = question.toLowerCase();
+  for (const key in knowledgeBase) {
+    if (key !== 'default') {
+      const entry = knowledgeBase[key];
+      for (const keyword of entry.keywords) {
+        if (lower.includes(keyword)) {
+          return entry.answer;
+        }
+      }
+    }
+  }
+  return knowledgeBase.default.answer;
+}
+
+function setQuestion(q) {
+  document.getElementById('userInput').value = q;
+  sendMessage();
+}
+
+function sendMessage() {
+  const input = document.getElementById('userInput');
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  // Afficher le message de l'utilisateur
+  const chatBox = document.getElementById('chatBox');
+  const userMessageDiv = document.createElement('div');
+  userMessageDiv.className = 'message user';
+  userMessageDiv.innerHTML = `<div class="message-content">${escapeHtml(message)}</div>`;
+  chatBox.appendChild(userMessageDiv);
+  input.value = '';
+  
+  // Trouver la réponse
+  const answer = findAnswer(message);
+  setTimeout(() => {
+    const botMessageDiv = document.createElement('div');
+    botMessageDiv.className = 'message bot';
+    botMessageDiv.innerHTML = `<div class="message-content">${escapeHtml(answer).replace(/\n/g, '<br>')}</div>`;
+    chatBox.appendChild(botMessageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, 600);
+  
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+const tic7Curriculum = [
+  {
+    title: "Concepts généraux de l'informatique",
+    keywords: ["informatique", "information", "donnée", "traitement", "résultat", "tic"],
+    short: "L'informatique est la science du traitement automatique de l'information à l'aide d'un ordinateur.",
+    details: "Notions importantes : une donnée est un élément brut, l'information est une donnée qui a du sens, le traitement transforme les données, et le résultat est l'information obtenue après traitement. Les TIC servent à apprendre, communiquer, chercher, produire et stocker des informations."
+  },
+  {
+    title: "Présentation de l'ordinateur",
+    keywords: ["ordinateur", "unité centrale", "écran", "clavier", "souris", "périphérique", "matériel", "hardware", "software", "logiciel"],
+    short: "Un ordinateur est une machine électronique qui reçoit, traite, stocke et restitue des informations.",
+    details: "On distingue le matériel, qui est la partie physique visible comme l'unité centrale, l'écran, le clavier, la souris et l'imprimante, et le logiciel, qui est l'ensemble des programmes comme Windows, Word ou Excel. Les périphériques peuvent être d'entrée, de sortie ou mixtes."
+  },
+  {
+    title: "Windows",
+    keywords: ["windows", "bureau", "icône", "barre des tâches", "démarrer", "fenêtre", "système d'exploitation"],
+    short: "Windows est un système d'exploitation qui permet de gérer l'ordinateur et d'utiliser les programmes.",
+    details: "Le bureau Windows contient les icônes, la barre des tâches, le bouton Démarrer et la zone de notification. Une fenêtre contient souvent une barre de titre, des boutons réduire/agrandir/fermer et une zone de travail."
+  },
+  {
+    title: "Fichiers et répertoires",
+    keywords: ["fichier", "dossier", "répertoire", "extension", "copier", "coller", "couper", "renommer", "corbeille"],
+    short: "Un fichier contient des informations enregistrées; un dossier sert à organiser plusieurs fichiers.",
+    details: "Exemples : .docx pour un document Word, .jpg pour une image, .xlsx pour un classeur Excel. Les raccourcis utiles sont Ctrl+C pour copier, Ctrl+V pour coller et Ctrl+X pour couper. La corbeille garde temporairement les fichiers supprimés."
+  },
+  {
+    title: "Internet, navigateurs et moteurs de recherche",
+    keywords: ["internet", "web", "navigateur", "moteur de recherche", "google", "bing", "chrome", "edge", "adresse"],
+    short: "Internet est un réseau mondial; un navigateur ouvre les sites web; un moteur de recherche aide à trouver des informations.",
+    details: "Chrome, Edge, Firefox ou Opera sont des navigateurs. Google et Bing sont des moteurs de recherche. Pour bien chercher, il faut utiliser des mots-clés précis, comparer les sources et éviter les sites suspects."
+  },
+  {
+    title: "Microsoft Word",
+    keywords: ["word", "traitement de texte", "document", "ruban", "zone de travail", "police", "mise en forme"],
+    short: "Microsoft Word est un logiciel de traitement de texte utilisé pour créer et mettre en forme des documents.",
+    details: "Son interface contient la barre de titre, la barre d'outils d'accès rapide, le ruban, la zone de travail, la barre de défilement et la barre d'état. On l'utilise pour écrire, corriger, enregistrer et présenter un texte."
+  }
+];
+
+function findAnswer(question) {
+  const lower = question.toLowerCase();
+  const wantsDetails = /(explique|détaille|comment|pourquoi|définis|definition|définition|rôle|exemple)/i.test(question);
+  const topic = tic7Curriculum.find(item => item.keywords.some(keyword => lower.includes(keyword)));
+
+  if (!topic) {
+    return "Je peux répondre sur les cours TIC de 7ème : informatique, ordinateur, matériel et logiciel, Windows, fichiers et dossiers, Internet, moteurs de recherche et Microsoft Word. Pose ta question avec un mot-clé du cours.";
+  }
+
+  if (!wantsDetails && question.split(/\s+/).length <= 7) {
+    return `${topic.title} : ${topic.short}`;
+  }
+
+  return `${topic.title}\n${topic.short}\n\n${topic.details}`;
+}
+</script>
+
+</body>
+
+</html>

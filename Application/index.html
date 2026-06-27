@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INITIC - Plateforme d'apprentissage numérique</title>
+
+    <link rel="stylesheet" href="../CSS/responsive.css">
+    <link rel="stylesheet" href="../CSS/Style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+</head>
+
+<body onload="updateNavbar()">
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="logo">
+            <i class="fa-solid fa-graduation-cap"></i>
+            INITIC
+        </div>
+
+        <nav aria-label="Navigation principale">
+            <ul>
+                <li><a href="index.html" title="Accueil" aria-label="Aller à l'accueil">Accueil</a></li>
+                <li><a href="Cours.html" title="Mes cours" aria-label="Voir mes cours">Cours</a></li>
+                <li><a href="Quiz.html" title="Quiz" aria-label="Accéder aux quiz">Quiz</a></li>
+                <li><a href="Resultats.html" title="Résultats obtenus" aria-label="Voir mes résultats">Résultats</a></li>
+                <li><a href="login.html" title="Se connecter" aria-label="Page de connexion">Connexion</a></li>
+            </ul>
+        </nav>
+
+    </header>
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <div class="hero-left">
+
+            <h1>
+                Apprendre l'informatique autrement en 7ᵉ année
+            </h1>
+
+            <p>
+                Une plateforme interactive permettant
+                l'apprentissage de cours de TIC, l'évaluation formative,
+                 et le suivi
+                des compétences numériques.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="#" onclick="checkAccessAndNavigate('Cours.html'); return false;" class="btn-primary" aria-label="Commencer l'apprentissage" title="Commencer">
+                    Commencer
+                </a>
+
+                <a href="#" onclick="checkAccessAndNavigate('Resultats.html'); return false;" class="btn-secondary" aria-label="Découvrir la plateforme" title="Découvrir">
+                    Découvrir
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-right">
+
+            <div class="card-preview">
+
+                <h3>Accompagnement</h3>
+
+                <p>
+                    Accompagner les élèves de 7ème dans l'apprentissage de TIC.
+                </p>
+
+            </div>
+
+            <div class="card-preview">
+
+                <h3>Evaluation formative</h3>
+
+                <p>
+                   l'évaluation formative sous forme d'un quiz interractif.
+                </p>
+
+            </div>
+
+            <div class="card-preview">
+
+                <h3>Analyse des performances</h3>
+
+                <p>
+                    le système analyse les performances de chaque élève.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FONCTIONNALITÉS -->
+
+    <section class="features">
+
+        <h2>Fonctionnalités Innovantes</h2>
+
+        <div class="feature-grid">
+
+            <div class="feature-card">
+                <i class="fa-solid fa-book"></i>
+                <h3>Cours Interactifs</h3>
+                <p>Leçons numériques de TIC.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fa-solid fa-laptop-code"></i>
+                <h3>Quiz Automatisés</h3>
+                <p> Avec Correction instantanée.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fa-solid fa-chart-line"></i>
+                <h3>Analyse des Performances</h3>
+                <p>Suivi détaillé de la progression de chaque élève.</p>
+            </div>
+
+            <div class="feature-card">
+                <i class="fa-solid fa-robot"></i>
+                <h3>Assistant Pédagogique</h3>
+                <p>Aide intelligente intégrée à la plateforme.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- RÉSULTATS OBTENUS -->
+
+    <section class="skills">
+
+        <h2>Cours prévus</h2>
+
+        <div class="skill-box">
+
+            <div class="skill">
+                <span>Concepts généraux de l'informatique</span>
+                <div class="progress">
+                    <div style="width:100%"></div>
+                </div>
+            </div>
+
+            <div class="skill">
+                <span>Présentation de l'ordinateur</span>
+                <div class="progress">
+                    <div style="width:100%"></div>
+                </div>
+            </div>
+
+            <div class="skill">
+                <span>Les fondamentaux de Windows</span>
+                <div class="progress">
+                    <div style="width:100%"></div>
+                </div>
+            </div>
+
+            <div class="skill">
+                <span>Les fichiers et répetoires</span>
+                <div class="progress">
+                    <div style="width:100%"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h3>INITIC</h3>
+
+        <p>
+            Plateforme numérique interactive d'apprentissage
+            et d'évaluation formative de TIC.
+        </p>
+
+        <p>
+            © 2026 Tous droits réservés | INITIC - RDC
+        </p>
+
+    </footer>
+
+<script src="../Java Script/Protection.js"></script>
+<script>
+// Mise à jour dynamique de la navbar selon l'authentification
+function updateNavbar() {
+    const isConnected = localStorage.getItem('isConnected') === 'true';
+    const navList = document.querySelector('nav ul');
+    
+    if (isConnected) {
+        // Remplacer le lien "Connexion" par "Déconnexion"
+        const connectionLink = navList.querySelector('li:last-child');
+        connectionLink.innerHTML = '<a href="#" onclick="logout(); return false;" title="Se déconnecter" aria-label="Déconnexion">Déconnexion</a>';
+        
+        // Mettre à jour les liens pour qu'ils soient accessibles
+        const coursLink = navList.querySelector('li:nth-child(2) a');
+        const quizLink = navList.querySelector('li:nth-child(3) a');
+        const resultsLink = navList.querySelector('li:nth-child(4) a');
+        
+        if (coursLink) coursLink.style.cursor = 'pointer';
+        if (quizLink) quizLink.style.cursor = 'pointer';
+        if (resultsLink) resultsLink.style.cursor = 'pointer';
+    }
+}
+
+// Initialiser la navbar au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    updateNavbar();
+    
+    // Ajouter un listener pour les changements de connexion
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'isConnected') {
+            updateNavbar();
+        }
+    });
+});
+
+// Redirection pour les boutons du hero si pas connecté
+function checkAccessAndNavigate(url) {
+    const isConnected = localStorage.getItem('isConnected') === 'true';
+    if (!isConnected) {
+        alert('Vous devez être connecté pour accéder à cette page. Veuillez vous connecter ou créer un compte.');
+        window.location.href = 'login.html';
+    } else {
+        window.location.href = url;
+    }
+}
+</script>
+
+</body>
+
+</html>
