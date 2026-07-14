@@ -124,8 +124,8 @@
 
             <div class="feature-card">
                 <i class="fa-solid fa-laptop-code"></i>
-                <h3>Quiz Automatisés</h3>
-                <p> Avec Correction instantanée.</p>
+                <h3>Quiz automatisés</h3>
+                <p>Correction instantanée.</p>
             </div>
 
             <div class="feature-card">
@@ -174,7 +174,7 @@
             </div>
 
             <div class="skill">
-                <span>Les fichiers et répetoires</span>
+                <span>Les fichiers et répertoires</span>
                 <div class="progress">
                     <div style="width:100%"></div>
                 </div>
@@ -227,11 +227,17 @@ function updateNavbar() {
 // Initialiser la navbar au chargement
 document.addEventListener('DOMContentLoaded', function() {
     updateNavbar();
+    if (typeof applyRoleNavigation === 'function') {
+        applyRoleNavigation();
+    }
     
     // Ajouter un listener pour les changements de connexion
     window.addEventListener('storage', function(e) {
         if (e.key === 'isConnected') {
             updateNavbar();
+            if (typeof applyRoleNavigation === 'function') {
+                applyRoleNavigation();
+            }
         }
     });
 });

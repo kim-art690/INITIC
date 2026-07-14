@@ -194,7 +194,7 @@ body {
     <!-- PROFIL UTILISATEUR -->
     <div class="user-profile" style="display: flex; align-items: center; gap: 1rem; flex-shrink: 0;">
       <span class="user-icon" style="color: #334155; font-weight: 500;">👨‍🎓 Élève</span>
-      <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+      <button class="logout-button" onclick="logout()">Déconnexion</button>
     </div>
   </div>
 
@@ -205,7 +205,7 @@ body {
     <a href="Quiz.html">Quiz</a>
     <a href="Resultats.html">Résultats</a>
     <a href="Assistant.html">Assistant</a>
-    <button onclick="logout()" style="background: #ef4444; color: white; border: none; padding: 0.75rem; border-radius: 6px; cursor: pointer; font-weight: 600;">Déconnexion</button>
+    <button class="logout-button" onclick="logout()">Déconnexion</button>
   </nav>
 
 </header>
@@ -234,15 +234,15 @@ body {
   </div>
 
   <div class="stat-card warning">
-    <h3>Cours Complétés</h3>
+    <h3>Cours complétés</h3>
     <div id="completedCourses" class="stat-value">0 / 6</div>
-    <div class="stat-trend">A partir du curriculum</div>
+    <div class="stat-trend">À partir du curriculum</div>
   </div>
 
   <div class="stat-card">
     <h3>Temps d'Apprentissage</h3>
     <div id="learningTime" class="stat-value">0h</div>
-    <div class="stat-trend">journalier</div>
+    <div class="stat-trend">Journalier</div>
   </div>
 </div>
 

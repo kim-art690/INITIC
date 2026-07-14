@@ -26,26 +26,57 @@ function updateHeaderWithStudentName() {
   applyRoleNavigation();
 }
 
-function applyRoleNavigation() {
+function getCurrentPage() {
+  const page = window.location.pathname.split('/').pop().toLowerCase();
+  return page === '' ? 'index.html' : page;
+}
+
+function getRoleNavLinks() {
   const role = getUserRole();
-  const isTeacher = role === 'teacher';
-  const navs = document.querySelectorAll('#navMenu, #mobileNav');
+  const currentPage = getCurrentPage();
+  const links = [];
 
-  navs.forEach(nav => {
-    const dashboardLinks = nav.querySelectorAll('a[href="DashboardEnseigant.html"]');
-
-    if (isTeacher && dashboardLinks.length === 0) {
-      const dashboardLink = document.createElement('a');
-      dashboardLink.href = 'DashboardEnseigant.html';
-      dashboardLink.textContent = 'Dashboard';
-      dashboardLink.className = 'teacher-dashboard-link';
-      nav.insertBefore(dashboardLink, nav.querySelector('button') || null);
+  if (role === 'teacher') {
+    if (currentPage === 'index.html') {
+      links.push({ text: 'Cours', href: 'Cours.html' });
+      links.push({ text: 'Dashboard', href: 'DashboardEnseigant.html' });
+    } else {
+      links.push({ text: 'Accueil', href: 'index.html' });
+      links.push({ text: 'Cours', href: 'Cours.html' });
+      links.push({ text: 'Dashboard', href: 'DashboardEnseigant.html' });
     }
+  } else {
+    links.push({ text: 'Accueil', href: 'index.html' });
+    links.push({ text: 'Cours', href: 'Cours.html' });
+    links.push({ text: 'Assistant', href: 'Assistant.html' });
+    links.push({ text: 'Résultats', href: 'Resultats.html' });
+  }
 
-    if (!isTeacher) {
-      dashboardLinks.forEach(link => link.remove());
-    }
-  });
+  return links;
+}
+
+function renderNavLinks(nav, links) {
+  if (!nav) return;
+
+  if (nav.id === 'navMenu' || nav.id === 'mobileNav') {
+    nav.innerHTML = links.map(link => `<a href="${link.href}" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">${link.text}</a>`).join('');
+  } else if (nav.tagName === 'UL') {
+    nav.innerHTML = links.map(link => `<li><a href="${link.href}" style="text-decoration: none; color: #334155; font-weight: 500; transition: 0.3s;">${link.text}</a></li>`).join('') + (links.length ? '<li><a href="#" onclick="logout(); return false;" style="text-decoration: none; color: #ef4444; font-weight: 600;">Déconnexion</a></li>' : '');
+  }
+}
+
+function applyRoleNavigation() {
+  const isConnected = localStorage.getItem('isConnected') === 'true';
+  if (!isConnected) return;
+
+  const links = getRoleNavLinks();
+  const navMenu = document.getElementById('navMenu');
+  const mobileNav = document.getElementById('mobileNav');
+  const defaultNav = document.querySelector('nav ul');
+
+  renderNavLinks(navMenu, links);
+  renderNavLinks(mobileNav, links);
+  renderNavLinks(defaultNav, links);
 }
 
 function requireTeacher() {
