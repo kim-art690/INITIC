@@ -62,7 +62,7 @@
 </header>
 
 <!-- CONTENU PRINCIPAL -->
-<main class="courses-container" style="max-width: 900px; margin: 0 auto; padding: 2rem 5%;">
+<main class="courses-container" style="max-width: 900px; margin: 0 auto; padding: 2rem 5%; display: block;">
 
 <!-- HEADER SECTION -->
 <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem;">
@@ -71,17 +71,22 @@
 </div>
 
 <!-- QUIZ CONTAINER - CENTRÉ -->
-<div id="quizContainer" style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+<div id="quizContainer" style="background: white; border-radius: 15px; padding: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem; display: block;">
 
   <!-- PROGRESSION -->
   <div style="margin-bottom: 2rem;">
-    <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; gap: 0.75rem; flex-wrap: wrap;">
       <span style="color: #64748b; font-size: 14px;">
         Question <span id="questionNum">1</span> / <span id="totalQuestions">5</span>
       </span>
-      <span style="color: #2563eb; font-weight: 600; font-size: 14px;">
-        ⏱ <span id="timer">60</span>s
-      </span>
+      <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+        <span style="background: #eff6ff; color: #2563eb; padding: 0.35rem 0.7rem; border-radius: 999px; font-weight: 700; font-size: 13px;">
+          Score : <span id="scoreDisplay">0</span>
+        </span>
+        <span style="color: #2563eb; font-weight: 600; font-size: 14px;">
+          ⏱ <span id="timer">60</span>s
+        </span>
+      </div>
     </div>
     <div style="height: 8px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
       <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, #8b5cf6, #7c3aed); width: 20%; transition: width 0.3s ease;"></div>
@@ -112,7 +117,7 @@
 </div>
 
 <!-- RÉSULTATS (caché par défaut) -->
-<div id="resultContainer" style="display: none;">
+<div id="resultContainer" style="display: none; width: 100%;">
 
   <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; text-align: center;">
     <h2 style="font-size: clamp(24px, 5vw, 32px); margin-bottom: 1.5rem;">📊 Résultats du Quiz</h2>
@@ -147,16 +152,18 @@ const mobileNav = document.getElementById('mobileNav');
 
 function toggleMobileMenu() {
   if (window.innerWidth <= 768) {
-    hamburger.style.display = 'block';
+    hamburger.style.display = 'inline-flex';
+    navMenu.style.display = 'none';
+    mobileNav.classList.remove('open');
   } else {
     hamburger.style.display = 'none';
     navMenu.style.display = 'flex';
-    mobileNav.style.display = 'none';
+    mobileNav.classList.remove('open');
   }
 }
 
 hamburger?.addEventListener('click', () => {
-  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+  mobileNav.classList.toggle('open');
 });
 
 window.addEventListener('resize', toggleMobileMenu);
@@ -197,13 +204,34 @@ function shuffleArray(array) {
   return array;
 }
 
+function calculateScore() {
+  let currentScore = 0;
+  for (let i = 0; i < currentQuestions.length; i++) {
+    if (userAnswers[i] === currentQuestions[i].answer) {
+      currentScore++;
+    }
+  }
+  return currentScore;
+}
+
+function updateScoreDisplay() {
+  const currentScore = calculateScore();
+  score = currentScore;
+  const scoreElement = document.getElementById('scoreDisplay');
+  if (scoreElement) {
+    scoreElement.textContent = currentScore;
+  }
+}
+
 function initializeQuiz() {
-  // Sélectionner 5 questions aléatoires
   currentQuestions = shuffleArray([...questionDatabase]).slice(0, 5);
   userAnswers = new Array(5).fill(null);
   score = 0;
   currentQuestionIndex = 0;
   timeLeft = 60;
+  document.getElementById('questionNum').textContent = currentQuestionIndex + 1;
+  document.getElementById('totalQuestions').textContent = currentQuestions.length;
+  updateScoreDisplay();
 
   loadQuestion();
   startTimer();
@@ -227,6 +255,7 @@ function loadQuestion() {
   document.getElementById('questionNum').textContent = currentQuestionIndex + 1;
   document.getElementById('totalQuestions').textContent = currentQuestions.length;
   document.getElementById('progressBar').style.width = ((currentQuestionIndex + 1) / currentQuestions.length * 100) + '%';
+  updateScoreDisplay();
 
   const optionsDiv = document.getElementById('options');
   optionsDiv.innerHTML = '';
@@ -266,6 +295,7 @@ function loadQuestion() {
 
 function selectOption(index) {
   userAnswers[currentQuestionIndex] = index;
+  updateScoreDisplay();
   loadQuestion();
 }
 
@@ -326,6 +356,8 @@ function finishQuiz() {
   let results = JSON.parse(localStorage.getItem('quizResults') || '[]');
   results.push({ score, total: currentQuestions.length, percentage, date: new Date().toISOString() });
   localStorage.setItem('quizResults', JSON.stringify(results));
+  localStorage.setItem('lastQuizScore', score);
+  localStorage.setItem('lastQuizPercentage', percentage);
 
   // Afficher les résultats
   document.getElementById('quizContainer').style.display = 'none';

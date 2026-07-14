@@ -197,20 +197,20 @@ const hamburger = document.getElementById('hamburger');
 const navMenu = document.getElementById('navMenu');
 const mobileNav = document.getElementById('mobileNav');
 
-// Afficher/masquer le menu hamburger sur mobile
 function toggleMobileMenu() {
   if (window.innerWidth <= 768) {
-    hamburger.style.display = 'block';
-    navMenu.style.display = mobileNav.style.display === 'flex' ? 'none' : 'none';
+    hamburger.style.display = 'inline-flex';
+    navMenu.style.display = 'none';
+    mobileNav.classList.remove('open');
   } else {
     hamburger.style.display = 'none';
     navMenu.style.display = 'flex';
-    mobileNav.style.display = 'none';
+    mobileNav.classList.remove('open');
   }
 }
 
 hamburger?.addEventListener('click', () => {
-  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+  mobileNav.classList.toggle('open');
 });
 
 window.addEventListener('resize', toggleMobileMenu);

@@ -330,16 +330,18 @@ const mobileNav = document.getElementById('mobileNav');
 
 function toggleMobileMenu() {
   if (window.innerWidth <= 768) {
-    hamburger.style.display = 'block';
+    hamburger.style.display = 'inline-flex';
+    navMenu.style.display = 'none';
+    mobileNav.classList.remove('open');
   } else {
     hamburger.style.display = 'none';
-    mobileNav.style.display = 'none';
     navMenu.style.display = 'flex';
+    mobileNav.classList.remove('open');
   }
 }
 
 hamburger?.addEventListener('click', () => {
-  mobileNav.style.display = mobileNav.style.display === 'flex' ? 'none' : 'flex';
+  mobileNav.classList.toggle('open');
 });
 
 window.addEventListener('resize', toggleMobileMenu);

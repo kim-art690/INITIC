@@ -35,7 +35,7 @@ body {
   min-height: 100vh;
   font-family: 'Poppins', sans-serif;
   color: var(--dark);
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+  background: linear-gradient(135deg, #f4f8ff 0%, #eef5ff 42%, #f8fbff 100%);
   line-height: 1.6;
 }
 
@@ -70,14 +70,17 @@ body::after {
 
 .header-responsive {
   backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.08);
 }
 
 .nav-menu a,
 .mobile-nav a,
 .teacher-dashboard-link {
-  border-radius: 8px;
-  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  padding: 0.5rem 0.85rem;
   line-height: 1;
+  font-weight: 600;
 }
 
 .nav-menu a:hover,
@@ -85,6 +88,7 @@ body::after {
 .teacher-dashboard-link:hover {
   background: #eff6ff;
   color: var(--primary) !important;
+  transform: translateY(-1px);
 }
 
 .logout-button {
@@ -92,17 +96,19 @@ body::after {
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: var(--danger);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.45rem 0.7rem;
+  background: transparent;
+  color: #334155;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
   line-height: 1;
   font-size: clamp(12px, 2vw, 16px);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
   box-sizing: border-box;
+  text-decoration: none;
+  min-width: max-content;
 }
 
 .header-responsive .user-profile {
@@ -113,12 +119,17 @@ body::after {
 }
 
 .logout-button:hover {
-  background: #dc2626;
+  background: #eff6ff;
+  color: var(--primary);
+  transform: translateY(-1px);
 }
 
 .mobile-nav .logout-button {
   width: 100%;
   text-align: left;
+  justify-content: flex-start;
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
 }
 
 .teacher-dashboard-link {
@@ -142,6 +153,7 @@ body::after {
 #resultContainer > div,
 #chatBox {
   border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
 }
 
 .course-card,
@@ -251,7 +263,7 @@ nav a:hover {
 .btn-secondary,
 button {
   border: none;
-  border-radius: var(--radius);
+  border-radius: 999px;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -481,4 +493,169 @@ tbody tr:hover {
     gap: 8px;
   }
 
+}
+
+/* Mobile navigation improvements */
+.header,
+.header-responsive {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hamburger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid #dbeafe;
+  background: #f8fbff;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.nav-menu {
+  display: flex !important;
+  align-items: center;
+}
+
+.nav-menu ul,
+.mobile-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.mobile-nav {
+  display: none !important;
+  width: 100%;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.8rem;
+  padding-top: 0.9rem;
+  margin-top: 0.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.mobile-nav a,
+.mobile-nav button {
+  display: block;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 10px;
+  background: #f8fbff;
+  color: #0f172a;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.mobile-nav a:hover,
+.mobile-nav button:hover {
+  background: #e8f1ff;
+  color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .header,
+  .header-responsive {
+    padding: 0.8rem 4%;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: inline-flex !important;
+  }
+
+  .nav-menu {
+    display: none !important;
+  }
+
+  .mobile-nav.open {
+    display: flex !important;
+  }
+
+  .user-profile {
+    width: 100%;
+    justify-content: center;
+    order: 3;
+    margin-top: 0.4rem;
+  }
+
+  .hero,
+  .features,
+  .skills,
+  .courses-container,
+  .assistant-container,
+  .results-container,
+  .dashboard-container {
+    padding-left: 4%;
+    padding-right: 4%;
+  }
+
+  .hero {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .hero-left,
+  .hero-right {
+    width: 100%;
+  }
+
+  .hero-left h1 {
+    font-size: clamp(28px, 7vw, 38px);
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons a,
+  .hero-buttons button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .courses-grid,
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .header,
+  .header-responsive {
+    padding: 0.7rem 3%;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .hero-left h1 {
+    font-size: clamp(24px, 8vw, 32px);
+  }
+
+  .hero-left p,
+  .feature-card p,
+  .card-preview p {
+    font-size: 14px;
+  }
+
+  .mobile-nav a,
+  .mobile-nav button {
+    padding: 0.7rem 0.75rem;
+    font-size: 14px;
+  }
 }
