@@ -573,6 +573,16 @@ tbody tr:hover {
     align-items: center;
   }
 
+  .header-responsive .user-profile .logout-button {
+    display: none !important;
+  }
+
+  .mobile-nav .logout-button {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
   .hamburger {
     display: inline-flex !important;
   }
@@ -628,8 +638,40 @@ tbody tr:hover {
   }
 
   .courses-grid,
-  .feature-grid {
+  .feature-grid,
+  .stats-grid,
+  .competence-grid,
+  .charts-section {
     grid-template-columns: 1fr;
+  }
+
+  .course-card {
+    border-radius: 12px;
+  }
+
+  .course-card h3 {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .course-card p,
+  .stat-card p,
+  .competence-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .course-card button,
+  .stat-card button {
+    padding: 0.8rem 1rem;
+    font-size: 14px;
+  }
+
+  .results-container,
+  .courses-container,
+  .assistant-container {
+    padding-left: 4%;
+    padding-right: 4%;
   }
 }
 

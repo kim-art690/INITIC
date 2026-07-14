@@ -15,12 +15,10 @@ function getUserRole() {
 
 function updateHeaderWithStudentName() {
   const studentName = getStudentName();
-  const role = getUserRole();
   const userIcons = document.querySelectorAll('.user-icon, .student-icon');
 
   userIcons.forEach(el => {
-    const roleLabel = role === 'teacher' ? 'Enseignant' : 'Élève';
-    el.innerHTML = `<i class="fa-solid fa-user-circle" style="margin-right: 0.5rem;"></i>${studentName} (${roleLabel})`;
+    el.innerHTML = `<i class="fa-solid fa-user-circle" style="margin-right: 0.5rem;"></i>${studentName}`;
   });
 
   applyRoleNavigation();
